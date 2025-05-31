@@ -1,38 +1,48 @@
-# ignore everything in the root except the "wp-content" directory.
-!wp-content/
-# ignore everything in the root except the "wp-content" directory.
+# ignore everything in the root except the "wp-content" directory
 /*
 !wp-content/
-# ignore everything in the "wp-content" directory, except:
-# mu-plugins, plugins, and themes directories
+
+# ignore everything in the root except the "wp-content" directory
+!wp-content/
+
+# ignore everything in the "wp-content" directory except specific directories
 wp-content/*
 !wp-content/mu-plugins/
 !wp-content/plugins/
 !wp-content/themes/
 !wp-content/languages/
-# ignore all mu-plugins, plugins, and themes
-# unless explicitly whitelisted at the end of this file
+
+# ignore all contents in these directories (but keep the directories)
 wp-content/mu-plugins/*
+!wp-content/mu-plugins/.gitkeep
 wp-content/plugins/*
+!wp-content/plugins/.gitkeep
 wp-content/themes/*
+!wp-content/themes/.gitkeep
 wp-content/languages/*
-#wp-content/plugins/intellrocket-product-configurator/vendor/*
+!wp-content/languages/.gitkeep
+
 # ignore all files starting with . or ~
 .*
 ~*
+
 # ignore node dependency directories
 node_modules/
+
 # ignore OS generated files
 ehthumbs.db
 Thumbs.db
+
 # ignore Editor files
 *.sublime-project
 *.sublime-workspace
 *.komodoproject
+
 # ignore log files and databases
 *.log
 *.sql
 *.sqlite
+
 # ignore compiled files
 *.com
 *.class
@@ -40,6 +50,7 @@ Thumbs.db
 *.exe
 *.o
 *.so
+
 # ignore packaged files
 *.7z
 *.dmg
@@ -49,8 +60,7 @@ Thumbs.db
 *.rar
 *.tar
 *.zip
-# ignore json files
-*.json
+
 # -------------------------
 # BEGIN Whitelisted Files
 # -------------------------
@@ -61,6 +71,7 @@ Thumbs.db
 !README.md
 !CHANGELOG.md
 !composer.json
+
 # track favicon files, if they exist
 !android-chrome-*.png
 !apple-touch-icon*.png
@@ -71,4 +82,6 @@ Thumbs.db
 !mstile-*.png
 !safari-pinned-tab.svg
 !site.webmanifest
-!wp-content/themes/tld-cargo/
+
+# Whitelist specific themes/plugins if needed
+ !wp-content/themes/tld-cargo/
