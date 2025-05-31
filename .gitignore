@@ -84,4 +84,4 @@ Thumbs.db
 !site.webmanifest
 
 # Whitelist specific themes/plugins if needed
- !wp-content/themes/tld-cargo/
+!wp-content/themes/tld-cargo/

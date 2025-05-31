@@ -100,6 +100,7 @@ function tld_cargo_setup() {
 		)
 	);
 }
+
 add_action( 'after_setup_theme', 'tld_cargo_setup' );
 
 /**
@@ -112,6 +113,7 @@ add_action( 'after_setup_theme', 'tld_cargo_setup' );
 function tld_cargo_content_width() {
 	$GLOBALS['content_width'] = apply_filters( 'tld_cargo_content_width', 640 );
 }
+
 add_action( 'after_setup_theme', 'tld_cargo_content_width', 0 );
 
 /**
@@ -132,6 +134,7 @@ function tld_cargo_widgets_init() {
 		)
 	);
 }
+
 add_action( 'widgets_init', 'tld_cargo_widgets_init' );
 
 /**
@@ -140,8 +143,44 @@ add_action( 'widgets_init', 'tld_cargo_widgets_init' );
 function tld_cargo_scripts() {
 	wp_enqueue_style( 'tld-cargo-style', get_stylesheet_uri(), array(), _S_VERSION );
 	wp_style_add_data( 'tld-cargo-style', 'rtl', 'replace' );
+	// Main Style CSS
+	wp_enqueue_style( 'theme-plugins', get_template_directory_uri() . '/assets/css/theme-plugins.min.css' );
+	// Main Theme CSS
+	wp_enqueue_style( 'main-style', get_template_directory_uri() . '/assets/css/style.css' );
+	// Responsive Theme CSS
+	wp_enqueue_style( 'responsive-style', get_template_directory_uri() . '/assets/css/responsive.css' );
+
+	// Revolution Slider Styles
+	wp_enqueue_style( 'revolution-layers', get_template_directory_uri() . '/assets/revolution/css/layers.css' );
+	wp_enqueue_style( 'revolution-navigation', get_template_directory_uri() . '/assets/revolution/css/navigation.css' );
+	wp_enqueue_style( 'revolution-settings', get_template_directory_uri() . '/assets/revolution/css/settings.css' );
+	wp_enqueue_style( 'pe-icon-7-stroke', get_template_directory_uri() . '/assets/revolution/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css' );
+	wp_enqueue_style( 'font-awesome', get_template_directory_uri() . '/assets/revolution/fonts/font-awesome/css/font-awesome.css' );
 
 	wp_enqueue_script( 'tld-cargo-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
+
+
+	// Theme plugins
+	wp_enqueue_script('theme-plugins', get_template_directory_uri() . '/assets/js/theme-plugins.min.js', array('jquery'), null, true);
+
+	// Revolution Slider main files
+	wp_enqueue_script('themepunch-tools', get_template_directory_uri() . '/assets/revolution/js/jquery.themepunch.tools.min.js', array('jquery'), null, true);
+	wp_enqueue_script('themepunch-revolution', get_template_directory_uri() . '/assets/revolution/js/jquery.themepunch.revolution.min.js', array('jquery', 'themepunch-tools'), null, true);
+
+	// Revolution Slider extensions
+	wp_enqueue_script('revolution-actions', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.actions.min.js', array('jquery', 'themepunch-revolution'), null, true);
+	wp_enqueue_script('revolution-carousel', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.carousel.min.js', array('jquery', 'themepunch-revolution'), null, true);
+	wp_enqueue_script('revolution-kenburn', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.kenburn.min.js', array('jquery', 'themepunch-revolution'), null, true);
+	wp_enqueue_script('revolution-layeranimation', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.layeranimation.min.js', array('jquery', 'themepunch-revolution'), null, true);
+	wp_enqueue_script('revolution-migration', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.migration.min.js', array('jquery', 'themepunch-revolution'), null, true);
+	wp_enqueue_script('revolution-navigation', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.navigation.min.js', array('jquery', 'themepunch-revolution'), null, true);
+	wp_enqueue_script('revolution-parallax', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.parallax.min.js', array('jquery', 'themepunch-revolution'), null, true);
+	wp_enqueue_script('revolution-slideanims', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.slideanims.min.js', array('jquery', 'themepunch-revolution'), null, true);
+	wp_enqueue_script('revolution-video', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.video.min.js', array('jquery', 'themepunch-revolution'), null, true);
+
+	// Theme custom script
+	wp_enqueue_script('site-custom', get_template_directory_uri() . '/assets/js/site-custom.js', array('jquery'), null, true);
+
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
