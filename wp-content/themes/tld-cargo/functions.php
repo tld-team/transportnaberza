@@ -143,43 +143,76 @@ add_action( 'widgets_init', 'tld_cargo_widgets_init' );
 function tld_cargo_scripts() {
 	wp_enqueue_style( 'tld-cargo-style', get_stylesheet_uri(), array(), _S_VERSION );
 	wp_style_add_data( 'tld-cargo-style', 'rtl', 'replace' );
+	// Bootstrap Style CSS
+	wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/assets/css/bootstrap.min.css' );
+
+
 	// Main Style CSS
-	wp_enqueue_style( 'theme-plugins', get_template_directory_uri() . '/assets/css/theme-plugins.min.css' );
-	// Main Theme CSS
-	wp_enqueue_style( 'main-style', get_template_directory_uri() . '/assets/css/style.css' );
-	// Responsive Theme CSS
-	wp_enqueue_style( 'responsive-style', get_template_directory_uri() . '/assets/css/responsive.css' );
+	wp_enqueue_style('theme-plugins', get_template_directory_uri() . '/assets/css/theme-plugins.min.css');
+	wp_enqueue_style('main-style', get_template_directory_uri() . '/assets/css/style.css');
+	wp_enqueue_style('responsive-style', get_template_directory_uri() . '/assets/css/responsive.css');
 
 	// Revolution Slider Styles
-	wp_enqueue_style( 'revolution-layers', get_template_directory_uri() . '/assets/revolution/css/layers.css' );
-	wp_enqueue_style( 'revolution-navigation', get_template_directory_uri() . '/assets/revolution/css/navigation.css' );
-	wp_enqueue_style( 'revolution-settings', get_template_directory_uri() . '/assets/revolution/css/settings.css' );
-	wp_enqueue_style( 'pe-icon-7-stroke', get_template_directory_uri() . '/assets/revolution/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css' );
-	wp_enqueue_style( 'font-awesome', get_template_directory_uri() . '/assets/revolution/fonts/font-awesome/css/font-awesome.css' );
+	wp_enqueue_style('revolution-layers', get_template_directory_uri() . '/assets/revolution/css/layers.css');
+	wp_enqueue_style('revolution-navigation', get_template_directory_uri() . '/assets/revolution/css/navigation.css');
+	wp_enqueue_style('revolution-settings', get_template_directory_uri() . '/assets/revolution/css/settings.css');
+	wp_enqueue_style('pe-icon-7-stroke', get_template_directory_uri() . '/assets/revolution/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css');
+	wp_enqueue_style('font-awesome-rev', get_template_directory_uri() . '/assets/revolution/fonts/font-awesome/css/font-awesome.css');
 
 	wp_enqueue_script( 'tld-cargo-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
 
-
 	// Theme plugins
-	wp_enqueue_script('theme-plugins', get_template_directory_uri() . '/assets/js/theme-plugins.min.js', array('jquery'), null, true);
+	wp_enqueue_script('bootstrap', get_template_directory_uri() . '/assets/js/bootstrap.min.js', array('jquery'), null, true);
 
-	// Revolution Slider main files
-	wp_enqueue_script('themepunch-tools', get_template_directory_uri() . '/assets/revolution/js/jquery.themepunch.tools.min.js', array('jquery'), null, true);
-	wp_enqueue_script('themepunch-revolution', get_template_directory_uri() . '/assets/revolution/js/jquery.themepunch.revolution.min.js', array('jquery', 'themepunch-tools'), null, true);
 
-	// Revolution Slider extensions
-	wp_enqueue_script('revolution-actions', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.actions.min.js', array('jquery', 'themepunch-revolution'), null, true);
-	wp_enqueue_script('revolution-carousel', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.carousel.min.js', array('jquery', 'themepunch-revolution'), null, true);
-	wp_enqueue_script('revolution-kenburn', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.kenburn.min.js', array('jquery', 'themepunch-revolution'), null, true);
-	wp_enqueue_script('revolution-layeranimation', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.layeranimation.min.js', array('jquery', 'themepunch-revolution'), null, true);
-	wp_enqueue_script('revolution-migration', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.migration.min.js', array('jquery', 'themepunch-revolution'), null, true);
-	wp_enqueue_script('revolution-navigation', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.navigation.min.js', array('jquery', 'themepunch-revolution'), null, true);
-	wp_enqueue_script('revolution-parallax', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.parallax.min.js', array('jquery', 'themepunch-revolution'), null, true);
-	wp_enqueue_script('revolution-slideanims', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.slideanims.min.js', array('jquery', 'themepunch-revolution'), null, true);
-	wp_enqueue_script('revolution-video', get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.video.min.js', array('jquery', 'themepunch-revolution'), null, true);
+		// Osnovne JS skripte
+		wp_enqueue_script('theme-plugins', get_template_directory_uri() . '/assets/js/theme-plugins.min.js', array('jquery'), null, true);
+		wp_enqueue_script('jquery-tweet', get_template_directory_uri() . '/assets/twitter/jquery.tweet.js', array('jquery'), null, true);
 
-	// Theme custom script
-	wp_enqueue_script('site-custom', get_template_directory_uri() . '/assets/js/site-custom.js', array('jquery'), null, true);
+		// Revolution Slider glavne skripte
+		wp_enqueue_script('themepunch-tools', get_template_directory_uri() . '/assets/revolution/js/jquery.themepunch.tools.min.js', array('jquery'), null, true);
+		wp_enqueue_script('themepunch-revolution', get_template_directory_uri() . '/assets/revolution/js/jquery.themepunch.revolution.min.js', array('jquery', 'themepunch-tools'), null, true);
+
+		// Revolution Slider ekstenzije
+		$revolution_extensions = array(
+			'revolution-actions',
+			'revolution-carousel',
+			'revolution-kenburn',
+			'revolution-layeranimation',
+			'revolution-migration',
+			'revolution-navigation',
+			'revolution-parallax',
+			'revolution-slideanims',
+			'revolution-video'
+		);
+
+		foreach ($revolution_extensions as $extension) {
+			wp_enqueue_script(
+				$extension,
+				get_template_directory_uri() . '/assets/revolution/js/extensions/revolution.extension.' . str_replace('revolution-', '', $extension) . '.min.js',
+				array('jquery', 'themepunch-revolution'),
+				null,
+				true
+			);
+		}
+
+		// Custom JS
+		wp_enqueue_script('site-custom', get_template_directory_uri() . '/assets/js/site-custom.js', array('jquery'), null, true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -187,6 +220,15 @@ function tld_cargo_scripts() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'tld_cargo_scripts' );
+
+/**
+ * Helpers functions
+ */
+require get_template_directory() . '/inc/Custom_Walker_Nav.php';
+/**
+ * Helpers functions
+ */
+require get_template_directory() . '/inc/helper-functions.php';
 
 /**
  * Implement the Custom Header feature.
@@ -215,3 +257,62 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
+
+// Dodavanje i ređanje tabova
+add_filter('uwp_account_available_tabs', 'uwp_account_available_tabs_cb', 10, 1);
+function uwp_account_available_tabs_cb($tabs){
+	// Tab "Company"
+	$tabs['company'] = array(
+		'title' => __('Company', 'userswp'),
+		'icon'  => 'fas fa-building',
+		'order' => 3
+	);
+
+	// Tab "Users"
+	$tabs['users'] = array(
+		'title' => __('Users', 'userswp'),
+		'icon'  => 'fas fa-users',
+		'order' => 4
+	);
+
+	// Postavi podrazumevani redosled za postojeće tabove
+	foreach($tabs as $key => $tab) {
+		if(!isset($tab['order'])) {
+			$tabs[$key]['order'] = 10;
+		}
+	}
+
+	// Sortiraj tabove po redosledu
+	uasort($tabs, function($a, $b) {
+		return $a['order'] - $b['order'];
+	});
+
+	return $tabs;
+}
+
+// Naslov za Company tab
+add_filter('uwp_account_page_title', 'uwp_account_page_title_cb', 10, 2);
+function uwp_account_page_title_cb($title, $type){
+	if ($type == 'company') {
+		$title = __('Company Information', 'userswp');
+	} elseif ($type == 'users') {
+		$title = __('User Management', 'userswp');
+	}
+	return $title;
+}
+
+// Sadržaj za tabove
+add_filter('uwp_account_form_display', 'uwp_account_form_display_cb', 10, 1);
+function uwp_account_form_display_cb($type){
+	if ($type == 'company') {
+		echo '<div class="uwp-account-company">';
+		echo '<p>Ovde možete dodati informacije o vašoj kompaniji.</p>';
+		// Dodajte dodatni sadržaj ili formu ovde
+		echo '</div>';
+	} elseif ($type == 'users') {
+		echo '<div class="uwp-account-users">';
+		echo '<p>Upravljanje korisnicima vaše platforme.</p>';
+		// Dodajte dodatni sadržaj ili formu ovde
+		echo '</div>';
+	}
+}
