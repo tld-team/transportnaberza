@@ -85,3 +85,4 @@ Thumbs.db
 
 # Whitelist specific themes/plugins if needed
 !wp-content/themes/tld-cargo/
+!.github/

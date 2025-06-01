@@ -199,22 +199,20 @@ function tld_cargo_scripts() {
 		// Custom JS
 		wp_enqueue_script('site-custom', get_template_directory_uri() . '/assets/js/site-custom.js', array('jquery'), null, true);
 
+	/**
+	 * form Ajax
+	 */
 
+	if (is_page('account')) {
+		wp_enqueue_script( 'custom-ajax-company', get_template_directory_uri() . '/assets/js/forms/company.js', array( 'jquery' ), '', true );
 
+		// Localize script for AJAX URL
+		wp_localize_script( 'custom-ajax-company', 'tld_ajax_company', array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'nonce'    => wp_create_nonce( 'custom-ajax-company' )
+		) );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+	}
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
@@ -257,62 +255,13 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
+/**
+ * data table
+ */
+require get_template_directory() . '/inc/tld_cargo_db.php';
 
-// Dodavanje i ređanje tabova
-add_filter('uwp_account_available_tabs', 'uwp_account_available_tabs_cb', 10, 1);
-function uwp_account_available_tabs_cb($tabs){
-	// Tab "Company"
-	$tabs['company'] = array(
-		'title' => __('Company', 'userswp'),
-		'icon'  => 'fas fa-building',
-		'order' => 3
-	);
-
-	// Tab "Users"
-	$tabs['users'] = array(
-		'title' => __('Users', 'userswp'),
-		'icon'  => 'fas fa-users',
-		'order' => 4
-	);
-
-	// Postavi podrazumevani redosled za postojeće tabove
-	foreach($tabs as $key => $tab) {
-		if(!isset($tab['order'])) {
-			$tabs[$key]['order'] = 10;
-		}
-	}
-
-	// Sortiraj tabove po redosledu
-	uasort($tabs, function($a, $b) {
-		return $a['order'] - $b['order'];
-	});
-
-	return $tabs;
-}
-
-// Naslov za Company tab
-add_filter('uwp_account_page_title', 'uwp_account_page_title_cb', 10, 2);
-function uwp_account_page_title_cb($title, $type){
-	if ($type == 'company') {
-		$title = __('Company Information', 'userswp');
-	} elseif ($type == 'users') {
-		$title = __('User Management', 'userswp');
-	}
-	return $title;
-}
-
-// Sadržaj za tabove
-add_filter('uwp_account_form_display', 'uwp_account_form_display_cb', 10, 1);
-function uwp_account_form_display_cb($type){
-	if ($type == 'company') {
-		echo '<div class="uwp-account-company">';
-		echo '<p>Ovde možete dodati informacije o vašoj kompaniji.</p>';
-		// Dodajte dodatni sadržaj ili formu ovde
-		echo '</div>';
-	} elseif ($type == 'users') {
-		echo '<div class="uwp-account-users">';
-		echo '<p>Upravljanje korisnicima vaše platforme.</p>';
-		// Dodajte dodatni sadržaj ili formu ovde
-		echo '</div>';
-	}
-}
+/**
+ * user profile
+ */
+require get_template_directory() . '/inc/user-profile.php';
+require get_template_directory() . '/inc/forms/company.php';
