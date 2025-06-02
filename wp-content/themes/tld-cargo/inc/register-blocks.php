@@ -1,12 +1,12 @@
 <?php
 
-add_action('acf/init', 'tld_acf_blocks_init');
+add_action('init', 'tld_acf_blocks_init');
 function tld_acf_blocks_init(): void
 {
     if (function_exists('acf_register_block_type')) {
         /** ==============================
          *
-         * About Agency 1
+         * About Intro Block v1
          * ============================== */
         acf_register_block_type(array(
             'name' => 'about-intro-block-v1',
