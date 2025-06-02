@@ -29,7 +29,6 @@ function tld_ajax_company(): void {
 	tld_log(sprintf('update: %s', print_r($exist_user, true)));
 	try {
 		if ($exist_user) {
-			tld_log(sprintf('update: %s', print_r(get_current_user_id(), true)));
 			tld_update_company( $current_user, array(
 				'user'         => $current_user,
 				'type'         => $type,
@@ -40,7 +39,6 @@ function tld_ajax_company(): void {
 				'address'      => $address
 			) );
 		} else {
-			tld_log(sprintf('insert user id: %s', print_r(get_current_user_id(), true)));
 			tld_insert_company( array(
 				'user'         => $current_user,
 				'type'         => $type,
