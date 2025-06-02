@@ -4,12 +4,13 @@ if (!empty($data)) :
     $title = $data['title'] ?? '';
     $subtitle = $data['subtitle'] ?? '';
     $intro_text = $data['intro_text'] ?? '';
-    $image_data = !empty($data['image']) ? get_image($data['image']) : null;
+    $image_id = $data['image'] ?? '';
+    $image_url = $image_id ? wp_get_attachment_image_url($image_id, 'full') : '';
     $use_tabs = $data['select_content_type'] ?? false;
     $tabs = $data['tabs'] ?? [];
     $cta = $data['cta_button'] ?? null;
     ?>
-    <section class="bg-light-gray wide-tb-100 about-intro-block-v1">
+    <section class="bg-light-gray wide-tb-100">
         <div class="container pos-rel">
             <div class="row">
                 <div class="col-lg-6 ms-auto mb-0">
@@ -57,8 +58,7 @@ if (!empty($data)) :
                                     $tab_id = 'pills-' . $index;
                                     $active_class = $index === 0 ? 'show active' : '';
                                     ?>
-                                    <div class="tab-pane fade <?= $active_class; ?>" id="<?= $tab_id; ?>"
-                                         role="tabpanel"
+                                    <div class="tab-pane fade <?= $active_class; ?>" id="<?= $tab_id; ?>" role="tabpanel"
                                          aria-labelledby="<?= $tab_id; ?>-tab">
                                         <?php echo apply_filters('the_content', $tab['tab_content']); ?>
                                     </div>
@@ -73,11 +73,9 @@ if (!empty($data)) :
                     </div>
                 </div>
 
-                <?php if (!empty($image_data['url'])) : ?>
+                <?php if (!empty($image_url)) : ?>
                     <div class="img-business-man">
-                        <img src="<?= esc_url($image_data['url']); ?>"
-                             alt="<?= esc_attr($image_data['alt']); ?>"
-                             srcset="<?= esc_attr($image_data['srcset']); ?>">
+                        <img src="<?= esc_url($image_url); ?>" alt="">
                     </div>
                 <?php endif; ?>
             </div>
