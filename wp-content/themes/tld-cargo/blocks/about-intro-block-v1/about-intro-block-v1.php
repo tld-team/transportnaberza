@@ -1,55 +1,84 @@
 <?php
+$data = get_field('about_intro_block_v1');
+if (!empty($data)) :
+    $title = $data['title'] ?? '';
+    $subtitle = $data['subtitle'] ?? '';
+    $intro_text = $data['intro_text'] ?? '';
+    $image_id = $data['image'] ?? '';
+    $image_url = $image_id ? wp_get_attachment_image_url($image_id, 'full') : '';
+    $use_tabs = $data['select_content_type'] ?? false;
+    $tabs = $data['tabs'] ?? [];
+    $cta = $data['cta_button'] ?? null;
+    ?>
+    <section class="bg-light-gray wide-tb-100">
+        <div class="container pos-rel">
+            <div class="row">
+                <div class="col-lg-6 ms-auto mb-0">
 
-?>
-
-        <section class="bg-light-gray wide-tb-100">
-            <div class="container pos-rel">
-                <div class="row">
-                    <div class="col-lg-6 ms-auto mb-0">
-                        <!-- Heading Main -->
-                        <div class=" wow fadeInDown" data-wow-duration="0" data-wow-delay="0s">
+                    <?php if (!empty($title) || !empty($subtitle)) : ?>
+                        <div class="wow fadeInDown" data-wow-duration="0" data-wow-delay="0s">
                             <h1 class="heading-main text-start mb-5">
-                                <span>WHO WE ARE</span>About Us</h1>
+                                <?php if (!empty($title)) : ?>
+                                    <span><?= esc_html($title); ?></span>
+                                <?php endif; ?>
+                                <?php if (!empty($subtitle)) : ?>
+                                    <?= esc_html($subtitle); ?>
+                                <?php endif; ?>
+                            </h1>
                         </div>
-                        <!-- Heading Main -->
+                    <?php endif; ?>
 
-                        <p class="lead fw-5 txt-blue">Whether you require distribution or fulfillment, defined freight
-                            forwarding, or a complete supply chain solution, we are here for you.</p>
+                    <?php if (!empty($intro_text)) : ?>
+                        <div class="lead fw-5 txt-blue">
+                            <?php echo apply_filters('the_content', $intro_text); ?>
+                        </div>
+                    <?php endif; ?>
 
-                        <div class="mt-5">
+                    <div class="mt-5">
+                        <?php if (!empty($use_tabs) && !empty($tabs)) : ?>
                             <ul class="nav nav-pills theme-tabbing mb-3" id="pills-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" href="#pills-home"
-                                        role="tab" aria-controls="pills-home" aria-selected="true">About us</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile"
-                                        role="tab" aria-controls="pills-profile" aria-selected="false">Our History</a>
-                                </li>
+                                <?php foreach ($tabs as $index => $tab) :
+                                    if (empty($tab['title'])) continue;
+                                    $tab_id = 'pills-' . $index;
+                                    $active_class = $index === 0 ? 'active' : '';
+                                    ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link <?= $active_class; ?>" id="<?= $tab_id; ?>-tab"
+                                           data-bs-toggle="pill" href="#<?= $tab_id; ?>" role="tab"
+                                           aria-controls="<?= $tab_id; ?>"
+                                           aria-selected="<?= $index === 0 ? 'true' : 'false'; ?>">
+                                            <?= esc_html($tab['title']); ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
                             </ul>
                             <div class="tab-content theme-tabbing" id="pills-tabContent">
-                                <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
-                                    aria-labelledby="pills-home-tab">
-                                    <p>Collaboratively administrate empowered markets via plug-and-play networks.
-Dynamically procrastinate B2C users after installed base benefits. </p>
-                                    <p>We don’t just manage suppliers, we micro-manage them. We have a consultative,
-                                        personalized approach. Dramatically visualize customer directed convergence
-                                        without revolutionary ROI.</p>
-                                </div>
-                                <div class="tab-pane fade" id="pills-profile" role="tabpanel"
-                                    aria-labelledby="pills-profile-tab">
-                                    <p>Collaboratively administrate empowered markets via plug-and-play networks.
-Dynamically procrastinate B2C users after installed base benefits. </p>
-                                    <p>Dramatically visualize customer directed convergence without revolutionary ROI.
-                                    </p>
-                                </div>
+                                <?php foreach ($tabs as $index => $tab) :
+                                    if (empty($tab['tab_content'])) continue;
+                                    $tab_id = 'pills-' . $index;
+                                    $active_class = $index === 0 ? 'show active' : '';
+                                    ?>
+                                    <div class="tab-pane fade <?= $active_class; ?>" id="<?= $tab_id; ?>" role="tabpanel"
+                                         aria-labelledby="<?= $tab_id; ?>-tab">
+                                        <?php echo apply_filters('the_content', $tab['tab_content']); ?>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
-                        </div>
-                    </div>
-                    <div class="img-business-man">
-                        <img src="assets/images/courier-man.png" alt="">
+                        <?php elseif (empty($use_tabs) && !empty($cta)) : ?>
+                            <a href="<?= esc_url($cta['url']); ?>" class="btn btn-theme bg-orange me-3 mt-3"
+                               target="<?= esc_attr($cta['target'] ?: '_self'); ?>">
+                                <?= esc_html($cta['title']); ?>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
 
+                <?php if (!empty($image_url)) : ?>
+                    <div class="img-business-man">
+                        <img src="<?= esc_url($image_url); ?>" alt="">
+                    </div>
+                <?php endif; ?>
             </div>
-        </section>
+        </div>
+    </section>
+<?php endif; ?>
