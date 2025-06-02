@@ -219,6 +219,16 @@ function tld_cargo_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'tld_cargo_scripts' );
 
+function tld_cargo_dashboards_script(): void {
+	wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/assets/css/bootstrap.min.css' );
+
+	// Main Style CSS
+	wp_enqueue_style('theme-plugins', get_template_directory_uri() . '/assets/css/theme-plugins.min.css');
+	wp_enqueue_style('main-style', get_template_directory_uri() . '/assets/css/style.css');
+	wp_enqueue_style('responsive-style', get_template_directory_uri() . '/assets/css/responsive.css');
+}
+
+add_action( 'admin_enqueue_scripts', 'tld_cargo_dashboards_script' );
 /**
  * Helpers functions
  */
