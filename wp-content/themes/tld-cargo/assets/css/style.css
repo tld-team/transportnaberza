@@ -5087,3 +5087,13 @@ html.lenis body {
 .lenis.lenis-smooth iframe {
     pointer-events: none;
 }
+
+
+/*------------------------------------------*/
+/*   LINK SETTINGS
+TODO: Luka: Ovde su custom klase
+ */
+/*------------------------------------------*/
+.d-inline-flow-root {
+    display: inline flow-root; /*klasa za forme plugina UsersWP. Dodaje se kroz dashboard pkugina i postavlja inpute inline*/
+}

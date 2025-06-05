@@ -5,25 +5,28 @@ add_filter( 'uwp_account_available_tabs', 'tld_account_available_tabs_cb', 10, 1
 function tld_account_available_tabs_cb( $tabs ) {
 	// Tab "Company"
 	$tabs['company'] = array(
-		'title' => __( 'Company', 'userswp' ),
-		'icon'  => 'fas fa-building',
-		'order' => 3
+		'title' => __( 'Moji utovari', 'userswp' ),
+		'icon'  => 'fa-solid fa-truck-front',
+		'order' => 12
 	);
 
 	// Tab "Users"
 	$tabs['users'] = array(
 		'title' => __( 'Users', 'userswp' ),
 		'icon'  => 'fas fa-users',
-		'order' => 4
+		'order' => 11
 	);
 
+    unset($tabs[ 'privacy' ]);
+
 	// Postavi podrazumevani redosled za postojeće tabove
+    $count = 1;
 	foreach ( $tabs as $key => $tab ) {
 		if ( ! isset( $tab['order'] ) ) {
-			$tabs[ $key ]['order'] = 10;
+			$tabs[ $key ]['order'] = $count*10;
 		}
+        $count++;
 	}
-
 	// Sortiraj tabove po redosledu
 	uasort( $tabs, function ( $a, $b ) {
 		return $a['order'] - $b['order'];
@@ -96,9 +99,11 @@ function tld_account_form_display_cb( $type ): void {
         </div>
 		<?php
 	} elseif ( $type == 'users' ) {
-		echo '<div class="uwp-account-users">';
-		echo '<p>Upravljanje korisnicima vaše platforme.</p>';
-		// Dodajte dodatni sadržaj ili formu ovde
-		echo '</div>';
+		?>
+        <div class="uwp-account-users">
+		    <?php echo do_shortcode( '[child_users_dashboard]' )?>
+        </div>
+        <?php
 	}
 }
+

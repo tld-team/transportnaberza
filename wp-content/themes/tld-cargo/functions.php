@@ -208,12 +208,14 @@ function tld_cargo_scripts()
      */
 
     if (is_page('account')) {
-        wp_enqueue_script('custom-ajax-company', get_template_directory_uri() . '/assets/js/forms/company.js', array('jquery'), '', true);
+	    wp_enqueue_style('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css' );
+
+        wp_enqueue_script('tld-child-user', get_template_directory_uri() . '/assets/js/forms/child-users.js', array('jquery'), '', true);
 
         // Localize script for AJAX URL
-        wp_localize_script('custom-ajax-company', 'tld_ajax_company', array(
+        wp_localize_script('tld-child-users', 'tld_child_users', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('custom-ajax-company')
+            'nonce' => wp_create_nonce('sS8yMjPQ5EEJ7Qa')
         ));
 
     }
@@ -258,10 +260,6 @@ require get_template_directory() . '/inc/template-tags.php';
  */
 require get_template_directory() . '/inc/template-functions.php';
 
-/**
- * Functions for blocks registration.
- */
-require get_template_directory() . '/inc/register-blocks.php';
 
 /**
  * Customizer additions.
@@ -281,7 +279,14 @@ if (defined('JETPACK__VERSION')) {
 require get_template_directory() . '/inc/tld_cargo_db.php';
 
 /**
+ * Functions for blocks registration.
+ */
+require get_template_directory() . '/inc/register-blocks.php';
+
+/**
  * user profile
  */
+//require get_template_directory() . '/inc/custom-child-users.php';
+require get_template_directory() . "/inc/forms/child-user-action.php";
 require get_template_directory() . '/inc/user-profile.php';
 require get_template_directory() . '/inc/forms/company.php';
