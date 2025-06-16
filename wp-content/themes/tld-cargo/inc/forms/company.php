@@ -26,7 +26,7 @@ function tld_ajax_company(): void {
 
 	$exist_user = tld_company_exists($current_user);
 
-	tld_log(sprintf('update: %s', print_r($exist_user, true)));
+//	tld_log(sprintf('update: %s', print_r($exist_user, true)));
 	try {
 		if ($exist_user) {
 			tld_update_company( $current_user, array(

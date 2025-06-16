@@ -140,6 +140,44 @@ function tld_cargo_widgets_init()
 
 add_action('widgets_init', 'tld_cargo_widgets_init');
 
+/***
+ * log function
+ */
+if ( ! function_exists( 'tld_log' ) ) {
+	function tld_log( $entry, $mode = 'a', $file = 'tld_log' ) {
+		// Get WordPress uploads directory.
+		$upload_dir = wp_upload_dir();
+
+		$upload_dir = $upload_dir['basedir'];
+		$upload_dir = dirname(__FILE__);
+		// If the entry is array, json_encode.
+		if ( is_array( $entry ) ) {
+			$entry = json_encode( $entry );
+		}
+		// Write the log file.
+		$file  = $upload_dir . '/' . $file . '.log';
+		$file  = fopen( $file, $mode );
+		$bytes = fwrite( $file, current_time( 'mysql' ) . "::" . $entry . "\n" );
+		fclose( $file );
+		return $bytes;
+	}
+}
+
+function dd($array, $array2 = null )
+{
+	if ($array2 == null) {
+		echo '<pre>';
+		print_r($array);
+		echo '</pre>';
+	} else {
+		echo '<div class="flex-container" style="display: flex"> <div class="column" style="background-color:#f5f5f5;"><pre>';
+		print_r($array);
+		echo '</pre></div> <pre class="column" style="background-color:#f5eded;"><pre>';
+		print_r($array2);
+		echo '</pre></div> </div>';
+	}
+}
+/** ==================================================== */
 /**
  * Enqueue scripts and styles.
  */
@@ -170,8 +208,8 @@ function tld_cargo_scripts()
 
 
     // Osnovne JS skripte
-    wp_enqueue_script('theme-plugins', get_template_directory_uri() . '/assets/js/theme-plugins.min.js', array('jquery'), null, true);
-    wp_enqueue_script('jquery-tweet', get_template_directory_uri() . '/assets/twitter/jquery.tweet.js', array('jquery'), null, true);
+//    wp_enqueue_script('theme-plugins', get_template_directory_uri() . '/assets/js/theme-plugins.min.js', array('jquery'), null, true);
+    wp_enqueue_script('jquery-tweet', get_template_directory_uri() . '/assets/js/twitter/jquery.tweet.js', array('jquery'), null, true);
 
     // Revolution Slider glavne skripte
     wp_enqueue_script('themepunch-tools', get_template_directory_uri() . '/assets/revolution/js/jquery.themepunch.tools.min.js', array('jquery'), null, true);
@@ -286,7 +324,8 @@ require get_template_directory() . '/inc/register-blocks.php';
 /**
  * user profile
  */
-//require get_template_directory() . '/inc/custom-child-users.php';
+require get_template_directory() . '/inc/forms/license.php';
 require get_template_directory() . "/inc/forms/child-user-action.php";
 require get_template_directory() . '/inc/user-profile.php';
 require get_template_directory() . '/inc/forms/company.php';
+require get_template_directory() . '/inc/forms/user-form.php';

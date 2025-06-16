@@ -4,7 +4,7 @@
 add_filter( 'uwp_account_available_tabs', 'tld_account_available_tabs_cb', 10, 1 );
 function tld_account_available_tabs_cb( $tabs ) {
 	// Tab "Company"
-	$tabs['company'] = array(
+	$tabs['cargo-data'] = array(
 		'title' => __( 'Moji utovari', 'userswp' ),
 		'icon'  => 'fa-solid fa-truck-front',
 		'order' => 12
@@ -107,3 +107,31 @@ function tld_account_form_display_cb( $type ): void {
 	}
 }
 
+
+function tld_get_acf_for_account_tab($type) {
+	if ( isset( $_GET['type'] ) ) {
+		$type = strip_tags( esc_sql( $_GET['type'] ) );
+	} else {
+		$type = 'account';
+	}
+	$data = get_field( 'ald_account_data_description', 'option' );
+
+    $output = '';
+    switch ( $type ) {
+        case 'cargo-data':
+            $output = $data['cargo-data'];
+            break;
+	    case 'notifications':
+		    $output = $data['notifications'];
+            break;
+	    case 'users':
+		    $output = $data['users'];
+		    break;
+	    case 'change-password':
+		    $output = $data['change-password'];
+            break;
+        default:
+    }
+
+    return $output;
+}

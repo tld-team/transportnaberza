@@ -13,6 +13,11 @@ function custom_child_users_dashboard() {
 		return '<div class="alert alert-warning">Morate biti prijavljeni da biste pristupili ovom sadržaju.</div>';
 	}
 
+	// Provera korisničke uloge - zabrana pristupa za contributor role
+	$current_user = wp_get_current_user();
+	if (in_array('contributor', $current_user->roles)) {
+		return '<div class="alert alert-danger">Nemate dozvolu za pristup ovom sadržaju.</div>';
+	}
 	$current_user = wp_get_current_user();
 	$output = '';
 
@@ -36,13 +41,36 @@ function custom_child_users_dashboard() {
 		$output .= custom_handle_user_status_toggle($current_user->ID, $_GET['toggle_user_status']);
 	}
 
+	$allowed_users = uwp_get_usermeta($current_user->ID, 'broj_korisnika', true);
+
+	$users = get_users(array(
+		'meta_key' => 'parent_user_id',
+		'meta_value' => $current_user->ID,
+		'count_total' => true
+	));
+;
+
 	// 6. Prikaz HTML strukture sa vašim dizajnom
-	$output .= '
+	if (count($users) < $allowed_users) {
+		$output .= '
     <div class="container">
         <!-- Add User Button -->
         <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#userFormModal">
             <i class="bi bi-plus-circle"></i> Add User
         </button>';
+	} else {
+		$user_disable_notification = get_field( 'tld_account_user_disable_notification', 'options' );
+		$output .= '
+		<div class="container">
+    <!-- Info Message with similar styling to the original button -->
+    <div class="p-3 mb-3 bg-light text-dark rounded d-flex align-items-center">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <div>'. $user_disable_notification.'
+        </div>
+    </div>
+</div>
+		';
+	}
 
 	// 7. Prikaz liste postojećih child usera
 	$output .= custom_get_child_users_list($current_user->ID);
@@ -102,7 +130,7 @@ function custom_handle_child_user_creation($parent_id) {
 	$email = sanitize_email($_POST['email']);
 	$phone = sanitize_text_field($_POST['phone']);
 	$password = $_POST['password'];
-	$role = 'subscriber'; // Fiksna role kao subscriber
+	$role = 'contributor'; // Fiksna role kao subscriber
 
 	if (empty($username) || empty($email) || empty($password) || empty($first_name) || empty($last_name)) {
 		return '<div class="alert alert-danger">Sva obavezna polja moraju biti popunjena.</div>';

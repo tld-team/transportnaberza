@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'init', 'tld_acf_blocks_init' );
+add_action( 'acf/init', 'tld_acf_blocks_init' );
 function tld_acf_blocks_init(): void {
 	if ( function_exists( 'acf_register_block_type' ) ) {
 		/** ==============================
