@@ -48,9 +48,10 @@ function tld_cargo_setup()
     add_theme_support('post-thumbnails');
 
     // This theme uses wp_nav_menu() in one location.
-    register_nav_menus(
+	register_nav_menus(
         array(
-            'menu-1' => esc_html__('Primary', 'tld-cargo'),
+	        'primary-menu' => __('Primary Menu'),
+	        'mobile-menu' => __('Mobile Menu')
         )
     );
 
@@ -101,9 +102,18 @@ function tld_cargo_setup()
         )
     );
 }
-
 add_action('after_setup_theme', 'tld_cargo_setup');
 
+
+//// Registruje navigation menus
+//function register_my_menus() {
+//	register_nav_menus(
+//		array(
+//			'primary-menu' => __('Primary Menu'),
+//			'mobile-menu' => __('Mobile Menu')
+//		)
+//	);
+//}
 /**
  * Set the content width in pixels, based on the theme's design and stylesheet.
  *
@@ -208,7 +218,7 @@ function tld_cargo_scripts()
 
 
     // Osnovne JS skripte
-//    wp_enqueue_script('theme-plugins', get_template_directory_uri() . '/assets/js/theme-plugins.min.js', array('jquery'), null, true);
+    wp_enqueue_script('theme-plugins', get_template_directory_uri() . '/assets/js/theme-plugins.min.js', array('jquery'), null, true);
     wp_enqueue_script('jquery-tweet', get_template_directory_uri() . '/assets/js/twitter/jquery.tweet.js', array('jquery'), null, true);
 
     // Revolution Slider glavne skripte

@@ -2,7 +2,7 @@
 /* Template Name: Add cargo */
 get_header();
 ?>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<!--        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">-->
         <style>
             .required-field::after {
                 content: " *";

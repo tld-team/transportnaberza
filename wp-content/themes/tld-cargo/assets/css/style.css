@@ -4058,7 +4058,7 @@ footer .social-icons a:hover {
 }
 
 .header-one .navbar.header-fullpage.fixed {
-    background-color: rgba(var(--secondary-rgb), 0.75);
+    /*background-color: rgba(var(--secondary-rgb), 0.75); Boju sam izvukao u heder php*/
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     padding: 0;
@@ -4098,7 +4098,7 @@ footer .social-icons a:hover {
 
 /* Header Style First Home Page */
 .header-one {
-    position: absolute;
+    /*position: absolute; TODO zakomentarisao sam*/
     width: 100%;
     z-index: 1009;
 }
@@ -4134,7 +4134,8 @@ footer .social-icons a:hover {
 }
 
 .header-one .navbar {
-    background: transparent;
+    /*background: transparent; TODO: Izvukao sam boju u header.php*/
+    background: black;
     padding: 0.5rem 0;
 }
 
