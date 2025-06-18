@@ -218,7 +218,7 @@ function tld_cargo_scripts()
 
 
     // Osnovne JS skripte
-    wp_enqueue_script('theme-plugins', get_template_directory_uri() . '/assets/js/theme-plugins.min.js', array('jquery'), null, true);
+//    wp_enqueue_script('theme-plugins', get_template_directory_uri() . '/assets/js/theme-plugins.min.js', array('jquery'), null, true);
     wp_enqueue_script('jquery-tweet', get_template_directory_uri() . '/assets/js/twitter/jquery.tweet.js', array('jquery'), null, true);
 
     // Revolution Slider glavne skripte

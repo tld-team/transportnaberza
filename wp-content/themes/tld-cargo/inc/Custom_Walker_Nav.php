@@ -68,13 +68,13 @@ class Bootstrap_Walker_Nav_Menu extends Walker_Nav_Menu {
 		$item_output .= (isset($args->link_before) ? $args->link_before : '') . $icon_html . apply_filters('the_title', $item->title, $item->ID) . (isset($args->link_after) ? $args->link_after : '');
 
 		// Dodaje dropdown ikonu
-		if ($has_children) {
-			if ($depth === 0) {
-				$item_output .= ' <i class="icofont-rounded-down"></i>';
-			} else {
-				$item_output .= ' <i class="icofont-rounded-right"></i>';
-			}
-		}
+//		if ($has_children) {
+//			if ($depth === 0) {
+//				$item_output .= ' <i class="icofont-rounded-down"></i>';
+//			} else {
+//				$item_output .= ' <i class="icofont-rounded-right"></i>';
+//			}
+//		}
 
 		$item_output .= '</a>';
 		$item_output .= isset($args->after) ? $args->after : '';
