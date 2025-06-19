@@ -108,6 +108,12 @@ function tld_account_form_display_cb( $type ): void {
 }
 
 
+/**
+ * @param $type
+ *
+ * @return mixed|string
+ * Funkcija koja vraca ACF za pojedinacne tabove na akount stranici
+ */
 function tld_get_acf_for_account_tab($type) {
 	if ( isset( $_GET['type'] ) ) {
 		$type = strip_tags( esc_sql( $_GET['type'] ) );

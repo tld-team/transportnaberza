@@ -1,0 +1,80 @@
+/* TLD Cargo Database Admin Styles */
+.tld-cargo-db-admin {
+    max-width: 800px;
+}
+
+.tld-cargo-db-admin .form-table th {
+    width: 200px;
+    vertical-align: top;
+    padding-top: 15px;
+}
+
+.tld-cargo-db-admin .form-table td {
+    padding: 10px 10px 10px 0;
+}
+
+.tld-cargo-db-admin input[type="number"] {
+    width: 100px;
+}
+
+.tld-cargo-db-admin .description {
+    margin-top: 5px;
+    font-style: italic;
+    color: #666;
+}
+
+.tld-cargo-db-admin .available-forms {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.tld-cargo-db-admin .available-forms ul {
+    margin: 5px 0 0 20px;
+}
+
+.tld-cargo-db-admin .available-forms li {
+    margin-bottom: 5px;
+}
+
+.tld-cargo-db-admin .table-info {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.tld-cargo-db-admin .status-active {
+    color: #46b450;
+    font-weight: bold;
+}
+
+.tld-cargo-db-admin .status-inactive {
+    color: #dc3232;
+    font-weight: bold;
+}
+
+.tld-cargo-db-admin .notice {
+    margin: 15px 0;
+}
+
+.tld-cargo-db-admin .notice p {
+    margin: 0.5em 0;
+}
+
+/* Responsive design */
+@media screen and (max-width: 782px) {
+    .tld-cargo-db-admin .form-table th,
+    .tld-cargo-db-admin .form-table td {
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .tld-cargo-db-admin .form-table th {
+        padding-bottom: 0;
+    }
+}

@@ -324,7 +324,7 @@ if (defined('JETPACK__VERSION')) {
 /**
  * data table
  */
-require get_template_directory() . '/inc/tld_cargo_db.php';
+//require get_template_directory() . '/inc/tld_cargo_db.php';
 
 /**
  * Functions for blocks registration.
@@ -337,5 +337,4 @@ require get_template_directory() . '/inc/register-blocks.php';
 require get_template_directory() . '/inc/forms/license.php';
 require get_template_directory() . "/inc/forms/child-user-action.php";
 require get_template_directory() . '/inc/user-profile.php';
-require get_template_directory() . '/inc/forms/company.php';
 require get_template_directory() . '/inc/forms/user-form.php';
