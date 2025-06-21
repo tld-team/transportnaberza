@@ -119,3 +119,26 @@ class TLD_Cargo_Database {
 }
 // Initialize the plugin
 new TLD_Cargo_Database();
+
+/***
+ * log function
+ */
+if ( ! function_exists( 'tld_log' ) ) {
+	function tld_log( $entry, $mode = 'a', $file = 'tld_log' ) {
+		// Get WordPress uploads directory.
+		$upload_dir = wp_upload_dir();
+
+		$upload_dir = $upload_dir['basedir'];
+		$upload_dir = dirname(__FILE__);
+		// If the entry is array, json_encode.
+		if ( is_array( $entry ) ) {
+			$entry = json_encode( $entry );
+		}
+		// Write the log file.
+		$file  = $upload_dir . '/' . $file . '.log';
+		$file  = fopen( $file, $mode );
+		$bytes = fwrite( $file, current_time( 'mysql' ) . "::" . $entry . "\n" );
+		fclose( $file );
+		return $bytes;
+	}
+}

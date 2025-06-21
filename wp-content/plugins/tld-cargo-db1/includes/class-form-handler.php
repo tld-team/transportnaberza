@@ -33,9 +33,11 @@ class TLD_Cargo_Form_Handler {
 		// Get form data
 		$data = $submission->get_posted_data();
 
+		tld_log(sprintf( "Data %s", print_r($data, true) ));
 		// Map form fields to database columns
 		$db_data = $this->map_form_data($data);
 
+		tld_log(sprintf( "DB Data %s", print_r($db_data, true) ));
 		// Validate required fields
 		if (!$this->validate_required_fields($db_data)) {
 			$this->log_error('Required fields validation failed');
@@ -58,18 +60,18 @@ class TLD_Cargo_Form_Handler {
 	private function map_form_data($data) {
 		return array(
 			'user' => get_current_user_id(),
-			'date_from' => isset($data['date-from']) ? $data['date-from'] : '',
-			'date_to' => isset($data['date-to']) ? $data['date-to'] : '',
-			'date_from_plus' => isset($data['date-from-plus']) ? $data['date-from-plus'] : '',
-			'date_to_plus' => isset($data['date-to-plus']) ? $data['date-to-plus'] : '',
-			'vehicle_type' => isset($data['vehicle-type']) ? $data['vehicle-type'] : '',
-			'trailer' => isset($data['trailer']) ? $data['trailer'] : '',
-			'location_from' => isset($data['location-from']) ? $data['location-from'] : '',
-			'location_to' => isset($data['location-to']) ? $data['location-to'] : '',
-			'country_from' => isset($data['country-from']) ? $data['country-from'] : '',
-			'country_to' => isset($data['country-to']) ? $data['country-to'] : '',
-			'zip_from' => isset($data['zip-from']) ? $data['zip-from'] : '',
-			'zip_to' => isset($data['zip-to']) ? $data['zip-to'] : '',
+			'date_from' => isset($data['date_from']) ? $data['date_from'] : '',
+			'date_to' => isset($data['date_to']) ? $data['date_to'] : '',
+			'date_from_plus' => isset($data['date_from_plus']) ? $data['date_from_plus'] : '',
+			'date_to_plus' => isset($data['date_to_plus']) ? $data['date_to_plus'] : '',
+			'vehicle_type' => isset($data['vehicle_type'][0]) ? $data['vehicle_type'][0] : '',
+			'trailer' => isset($data['trailer'][0]) ? $data['trailer'][0] : '',
+			'location_from' => isset($data['location_from']) ? $data['location_from'] : '',
+			'location_to' => isset($data['location_to']) ? $data['location_to'] : '',
+			'country_from' => isset($data['country_from']) ? $data['country_from'] : '',
+			'country_to' => isset($data['country_to']) ? $data['country_to'] : '',
+			'zip_from' => isset($data['zip_from']) ? $data['zip_from'] : '',
+			'zip_to' => isset($data['zip_to']) ? $data['zip_to'] : '',
 			'distance' => isset($data['distance']) ? $data['distance'] : '',
 			'weight' => isset($data['weight']) ? $data['weight'] : '',
 			'length' => isset($data['length']) ? $data['length'] : '',

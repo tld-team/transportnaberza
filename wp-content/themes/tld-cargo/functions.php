@@ -322,11 +322,6 @@ if (defined('JETPACK__VERSION')) {
 }
 
 /**
- * data table
- */
-//require get_template_directory() . '/inc/tld_cargo_db.php';
-
-/**
  * Functions for blocks registration.
  */
 require get_template_directory() . '/inc/register-blocks.php';

@@ -2,63 +2,164 @@
 /* Template Name: Add cargo */
 get_header();
 ?>
-<!--        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">-->
-        <style>
-            .required-field::after {
-                content: " *";
-                color: red;
-            }
-            .form-container {
-                max-width: 800px;
-                margin: 30px auto;
-                padding: 20px;
-                background-color: #f8f9fa;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            }
-            .section-title {
-                border-bottom: 2px solid #0d6efd;
-                padding-bottom: 5px;
-                margin-bottom: 20px;
-                color: #0d6efd;
-            }
-        </style>
-    <div class="container form-container">
+    <div class="container">
         <h2 class="text-center mb-4">Transport Request Form</h2>
+
         <form id="transportForm" novalidate>
             <!-- User Section (hidden if user is logged in) -->
             <input type="hidden" id="user" name="user" value="">
 
-            <!-- Dates Section -->
-            <div class="mb-4">
-                <h4 class="section-title">Dates</h4>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="date_from" class="form-label required-field">Date From</label>
-                        <input type="date" class="form-control" id="date_from" name="date_from" required>
-                        <div class="invalid-feedback">
-                            Please provide a valid start date.
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-section">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 border-top txt-orange"></div>
+                            <h3 class="px-3 txt-orange">UTOVAR</h3>
+                            <div class="flex-grow-1 border-top txt-orange"></div>
                         </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="date_to" class="form-label required-field">Date To</label>
-                        <input type="date" class="form-control" id="date_to" name="date_to" required>
-                        <div class="invalid-feedback">
-                            Please provide a valid end date.
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="date_from" class="form-label required-field">Date From</label>
+                                <input type="date" class="form-control" id="date_from" name="date_from" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="location_from" class="form-label required-field">Location From</label>
+                                <input type="text" class="form-control datepicker" id="location_from"
+                                       name="location_from" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="zip_from" class="form-label">ZIP Code From</label>
+                                <input type="text" class="form-control" id="zip_from" name="zip_from">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="date_from_plus" class="form-label">Flexible Date From (+ days)</label>
+                                <input type="date" class="form-control" id="date_from_plus" name="date_from_plus">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="date_from_plus" class="form-label">Flexible Date From (+ days)</label>
-                        <input type="date" class="form-control" id="date_from_plus" name="date_from_plus">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="date_to_plus" class="form-label">Flexible Date To (+ days)</label>
-                        <input type="date" class="form-control" id="date_to_plus" name="date_to_plus">
+                <div class="col-md-6">
+                    <div class="form-section">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 border-top txt-orange"></div>
+                            <h3 class="px-3 txt-orange">ISTOVAR</h3>
+                            <div class="flex-grow-1 border-top txt-orange"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="date_to" class="form-label required-field">Date To</label>
+                                <input type="date" class="form-control" id="date_to" name="date_to" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="location_to" class="form-label required-field">Location To</label>
+                                <input type="text" class="form-control datepicker" id="location_to" name="location_to"
+                                       required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="zip_to" class="form-label">ZIP Code To</label>
+                                <input type="text" class="form-control" id="zip_to" name="zip_to">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="date_to_plus" class="form-label">Flexible Date To (+ days)</label>
+                                <input type="date" class="form-control" id="date_to_plus" name="date_to_plus">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+
+            <!-- Cargo Information Section -->
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 border-top txt-orange"></div>
+                    <h3 class="px-3 txt-orange">Informacije o teretu</h3>
+                    <div class="flex-grow-1 border-top txt-orange"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="weight" class="form-label">Weight (kg)</label>
+                        <input type="text" class="form-control" id="weight" name="weight"
+                               placeholder="Approximate weight">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="length" class="form-label">Length (m)</label>
+                        <input type="text" class="form-control" id="length" name="length"
+                               placeholder="Approximate length">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="height" class="form-label">Height (m)</label>
+                        <input type="text" class="form-control" id="height" name="height"
+                               placeholder="Approximate height">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="price" class="form-label">Price (€)</label>
+                        <input type="text" class="form-control" id="price" name="price"
+                               placeholder="Expected price in euros">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cargo Information Section -->
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 border-top txt-orange"></div>
+                    <h3 class="px-3 txt-orange">Informacije o vozilu!</h3>
+                    <div class="flex-grow-1 border-top txt-orange"></div>
+                </div>
+                <div class="row g-3">
+                    <!-- Truck -->
+                    <div class="col-6 col-md-4 col-lg">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="vehicle_type[]"
+                                   id="vehicle_type_truck" value="Truck" required>
+                            <label class="form-check-label" for="vehicle_type_truck">Truck</label>
+                        </div>
+                    </div>
+
+                    <!-- Van -->
+                    <div class="col-6 col-md-4 col-lg">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="vehicle_type[]" id="vehicle_type_van"
+                                   value="Van">
+                            <label class="form-check-label" for="vehicle_type_van">Van</label>
+                        </div>
+                    </div>
+
+                    <!-- Pickup -->
+                    <div class="col-6 col-md-4 col-lg">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="vehicle_type[]"
+                                   id="vehicle_type_pickup" value="Pickup">
+                            <label class="form-check-label" for="vehicle_type_pickup">Pickup</label>
+                        </div>
+                    </div>
+
+                    <!-- Trailer -->
+                    <div class="col-6 col-md-4 col-lg">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="vehicle_type[]"
+                                   id="vehicle_type_trailer" value="Trailer">
+                            <label class="form-check-label" for="vehicle_type_trailer">Trailer</label>
+                        </div>
+                    </div>
+
+                    <!-- Other -->
+                    <div class="col-6 col-md-4 col-lg">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="vehicle_type[]"
+                                   id="vehicle_type_other" value="Other">
+                            <label class="form-check-label" for="vehicle_type_other">Other</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Vehicle Information Section -->
             <div class="mb-4">
@@ -97,20 +198,6 @@ get_header();
             <div class="mb-4">
                 <h4 class="section-title">Locations</h4>
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="location_from" class="form-label required-field">Location From</label>
-                        <input type="text" class="form-control" id="location_from" name="location_from" required>
-                        <div class="invalid-feedback">
-                            Please provide a starting location.
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="location_to" class="form-label required-field">Location To</label>
-                        <input type="text" class="form-control" id="location_to" name="location_to" required>
-                        <div class="invalid-feedback">
-                            Please provide a destination location.
-                        </div>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -137,50 +224,23 @@ get_header();
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="zip_from" class="form-label">ZIP Code From</label>
-                        <input type="text" class="form-control" id="zip_from" name="zip_from">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="zip_to" class="form-label">ZIP Code To</label>
-                        <input type="text" class="form-control" id="zip_to" name="zip_to">
-                    </div>
+
                 </div>
                 <div class="mb-3">
                     <label for="distance" class="form-label">Distance (km)</label>
-                    <input type="text" class="form-control" id="distance" name="distance" placeholder="Approximate distance in kilometers">
+                    <input type="text" class="form-control" id="distance" name="distance"
+                           placeholder="Approximate distance in kilometers">
                 </div>
             </div>
 
-            <!-- Cargo Information Section -->
-            <div class="mb-4">
-                <h4 class="section-title">Cargo Information</h4>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="weight" class="form-label">Weight (kg)</label>
-                        <input type="text" class="form-control" id="weight" name="weight" placeholder="Approximate weight">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="length" class="form-label">Length (m)</label>
-                        <input type="text" class="form-control" id="length" name="length" placeholder="Approximate length">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="height" class="form-label">Height (m)</label>
-                        <input type="text" class="form-control" id="height" name="height" placeholder="Approximate height">
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="price" class="form-label">Price (€)</label>
-                    <input type="text" class="form-control" id="price" name="price" placeholder="Expected price in euros">
-                </div>
-            </div>
 
             <!-- Additional Information Section -->
             <div class="mb-4">
                 <h4 class="section-title">Additional Information</h4>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Any additional information about the transport"></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="3"
+                              placeholder="Any additional information about the transport"></textarea>
                 </div>
             </div>
 
@@ -190,59 +250,18 @@ get_header();
             </div>
         </form>
     </div>
-
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Form Validation Script -->
-    <script>
-        (function() {
-            'use strict';
-
-            // Fetch the form we want to apply custom Bootstrap validation styles to
-            const form = document.getElementById('transportForm');
-
-            // Prevent submission if form is invalid
-            form.addEventListener('submit', function(event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-
-                form.classList.add('was-validated');
-            }, false);
-
-            // Date validation - ensure date_to is after date_from
-            const dateFrom = document.getElementById('date_from');
-            const dateTo = document.getElementById('date_to');
-
-            dateFrom.addEventListener('change', validateDates);
-            dateTo.addEventListener('change', validateDates);
-
-            function validateDates() {
-                if (dateFrom.value && dateTo.value) {
-                    const fromDate = new Date(dateFrom.value);
-                    const toDate = new Date(dateTo.value);
-
-                    if (fromDate > toDate) {
-                        dateTo.setCustomValidity('End date must be after start date');
-                        dateTo.classList.add('is-invalid');
-                    } else {
-                        dateTo.setCustomValidity('');
-                        dateTo.classList.remove('is-invalid');
-                    }
-                }
-            }
-
-            // If you're in WordPress, you might want to populate the user field
-            // This would depend on how you're handling user authentication
-            // Example:
-            // const userField = document.getElementById('user');
-            // if (userField && wp_user_id) {
-            //     userField.value = wp_user_id;
-            // }
-        })();
-    </script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('.datepicker').datepicker({
+				format: 'dd.mm.yyyy',  // Display format
+				autoclose: true,
+				todayHighlight: true,
+				clearBtn: true,
+				language: 'de'  // Optional: For European formatting
+			});
+		});
+	</script>-->
 <?php
 get_footer();
 ?>
