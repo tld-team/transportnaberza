@@ -5098,3 +5098,12 @@ TODO: Luka: Ovde su custom klase
 .d-inline-flow-root {
     display: inline flow-root; /*klasa za forme plugina UsersWP. Dodaje se kroz dashboard pkugina i postavlja inpute inline*/
 }
+
+/** TODO: Luka: Ovde su custom klase za autocomplete */
+.flag-container {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+    width: 24px;
+    height: 16px;
+}

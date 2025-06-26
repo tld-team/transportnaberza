@@ -248,6 +248,15 @@ function tld_cargo_scripts()
         );
     }
 
+    wp_enqueue_script('jquery-ui-core');
+    wp_enqueue_script('jquery-ui-autocomplete');
+    wp_enqueue_script('autocomplete-form', get_template_directory_uri() . '/assets/js/autocomplete-form.js', array('jquery'), null, true);
+    wp_localize_script('autocomplete-form', 'autocompleteData', array(
+        'json_url' => get_template_directory_uri() . '/assets/js/countries-cities.json',
+        'ajax_url' => admin_url('admin-ajax.php')
+    ));
+
+    
     // Custom JS
     wp_enqueue_script('site-custom', get_template_directory_uri() . '/assets/js/site-custom.js', array('jquery'), null, true);
 
