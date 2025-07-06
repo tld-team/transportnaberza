@@ -65,6 +65,7 @@ class TLD_Cargo_Database_Admin {
 	/**
 	 * Settings section callback
 	 */
+    
 	public function settings_section_callback() {
 		echo '<p>Konfigurišite plugin za rad sa Contact Form 7.</p>';
 	}

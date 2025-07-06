@@ -54,6 +54,7 @@ class TLD_Cargo_Form_Handler {
 		}
 	}
 
+
 	/**
 	 * Map form data to database fields
 	 */

@@ -69,8 +69,7 @@ class TLD_Cargo_Database_Handler {
 
 	/**
 	 * Get single record by ID
-	 */
-	public function get_record($id) {
+	 */public function get_record($id) {
 		global $wpdb;
 		$id = absint($id);
 		
