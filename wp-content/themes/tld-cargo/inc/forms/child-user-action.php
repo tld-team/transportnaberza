@@ -173,6 +173,7 @@ function custom_handle_child_user_creation($parent_id) {
 	return '<div class="alert alert-success">Uspešno kreiran novi korisnik.</div>';
 }
 
+
 // Funkcija za obradu brisanja usera
 function custom_handle_child_user_deletion($parent_id, $child_user_id) {
 	// Provera nonce-a

@@ -62,6 +62,7 @@ class TLD_Cargo_Database_Admin {
 		);
 	}
 
+
 	/**
 	 * Settings section callback
 	 */
