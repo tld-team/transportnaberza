@@ -24,6 +24,7 @@ function tld_read_json($json_file_path) {
 /**
  * Update user data based on email
  */
+/*
 $users_data = tld_read_json(get_template_directory() . '/users.json');
 
 function update_user_data_based_on_email($email, $data) {
@@ -62,6 +63,8 @@ foreach ($users_data['rows'] as $key => $user) {
     echo $key . "<br>";
     update_user_data_based_on_email($user['email'], $user);
 }
+*/
+
 /** ============================================================================ */
 
 
