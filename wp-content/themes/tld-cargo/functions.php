@@ -374,3 +374,39 @@ function update_parent_user_ids_from_json($json_file_path) {
 }
 
 //update_parent_user_ids_from_json(get_template_directory() . '/parent_user.json');
+
+
+$users_data = tld_read_json(get_template_directory() . '/users.json');
+
+function update_user_data_based_on_email($email, $data) {
+    // Pronađi korisnika po email adresi
+    $user = get_user_by('email', $email);
+    
+    if (!$user) {
+        return false; // Korisnik nije pronađen
+    }
+    
+    $user_id = $user->ID;
+    
+    // Ažuriraj korisničke meta podatke
+    uwp_update_usermeta($user_id, 'mobile', $data['mobile']);
+    uwp_update_usermeta($user_id, 'company', $data['company']);
+    uwp_update_usermeta($user_id, 'fax', $data['fax']);
+    uwp_update_usermeta($user_id, 'tip_kompanije', $data['tip_kompanije']);
+    uwp_update_usermeta($user_id, 'kompanija', $data['kompanija']);
+    uwp_update_usermeta($user_id, 'pib', $data['pib']);
+    uwp_update_usermeta($user_id, 'country', 'gb');
+    uwp_update_usermeta($user_id, 'grad', $data['grad']);
+    uwp_update_usermeta($user_id, 'adresa', $data['adresa']);
+    uwp_update_usermeta($user_id, 'aktivan', $data['aktivan']);
+    uwp_update_usermeta($user_id, 'obrisati', $data['obrisati']);
+    uwp_update_usermeta($user_id, 'broj_korisnika', $data['broj_korisnika']);
+    uwp_update_usermeta($user_id, 'telefon_kompanije', $data['telefon_kompanije']);
+    echo "User updated: " . $email . "<br>";
+    return true;
+}
+
+foreach ($users_data['rows'] as $key => $user) {
+    echo $key . "<br>";
+    update_user_data_based_on_email($user['email'], $user);
+}
