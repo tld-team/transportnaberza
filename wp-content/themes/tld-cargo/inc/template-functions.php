@@ -37,8 +37,7 @@ function tld_cargo_pingback_header() {
 add_action( 'wp_head', 'tld_cargo_pingback_header' );
 
 // Funkcija za dinamičko popunjavanje select polja preko AJAX-a
-
-function populate_our_name_select_field_ajax($field) {
+function tld_populate_our_name_select_field_ajax($field) {
 	error_log('ACF Field Loaded: ' . print_r($field['key'], true)); // Provera ključa
 
 	global $wpdb;
@@ -68,7 +67,7 @@ function populate_our_name_select_field_ajax($field) {
 
 	return $field;
 }
-add_filter('acf/load_field/key=field_686123a122d07', 'populate_our_name_select_field_ajax', 10, 1);
+add_filter('acf/load_field/key=field_686123a122d07', 'tld_populate_our_name_select_field_ajax', 10, 1);
 
 
 // 1. Dodavanje 'ui' i 'ajax' opcija ACF polju
