@@ -345,34 +345,8 @@ require get_template_directory() . '/inc/forms/user-form.php';
 require get_template_directory() . '/inc/cargo-scraping.php';
 
 
-function update_parent_user_ids_from_json($json_file_path) {
-	if (!file_exists($json_file_path)) {
-		error_log("JSON file not found at path: $json_file_path");
-		return;
-	}
-
-	$json_content = file_get_contents($json_file_path);
-	$data = json_decode($json_content, true);
-
-	if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
-		error_log("Invalid JSON format in file: $json_file_path");
-		return;
-	}
-
-	foreach ($data as $entry) {
-		if (!isset($entry['account_email']) || !isset($entry['parent_email'])) {
-			continue;
-		}
-
-		$user = get_user_by('email', $entry['account_email']);
-		$parent_user = get_user_by('email', $entry['parent_email']);
-
-		if ($user && $parent_user) {
-			update_user_meta($user->ID, 'parent_user_id', $parent_user->ID);
-		}
-	}
-}
-
-//update_parent_user_ids_from_json(get_template_directory() . '/parent_user.json');
 
 
+// $user = get_user_by('email', 'gasa338@gmail.com');
+// // Set user role to contributor
+// $user->set_role('administrator');

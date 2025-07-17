@@ -60,3 +60,46 @@ function tld_read_json($json_file_path) {
 // }
 /** ============================================================================ */
 
+
+
+/**
+ * Update parent user IDs from JSON file
+ */
+function update_parent_user_ids_from_json($json_file_path) {
+	if (!file_exists($json_file_path)) {
+		error_log("JSON file not found at path: $json_file_path");
+		return;
+	}
+
+	$json_content = file_get_contents($json_file_path);
+	$data = json_decode($json_content, true);
+
+	if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
+		error_log("Invalid JSON format in file: $json_file_path");
+		return;
+	}
+
+	foreach ($data as $key => $entry) {
+		if (!isset($entry['account_email']) || !isset($entry['parent_email'])) {
+			continue;
+		}
+
+		$user = get_user_by('email', $entry['account_email']);
+		$parent_user = get_user_by('email', $entry['parent_email']);
+
+		if ($user && $parent_user) {
+            
+            // Skip if the user is an administrator
+            if (!in_array('administrator', $user->roles)) {
+                $user->set_role('contributor'); // Replaces all roles with "contributor"
+            }
+
+            // Set parent user ID
+			update_user_meta($user->ID, 'parent_user_id', $parent_user->ID);
+            echo $key . "<br>";
+        }
+	}
+}
+
+update_parent_user_ids_from_json(get_template_directory() . '/parent_user.json');
+/** ============================================================================ */
