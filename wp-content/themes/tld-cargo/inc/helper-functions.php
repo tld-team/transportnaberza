@@ -101,5 +101,5 @@ function update_parent_user_ids_from_json($json_file_path) {
 	}
 }
 
-update_parent_user_ids_from_json(get_template_directory() . '/parent_user.json');
+// update_parent_user_ids_from_json(get_template_directory() . '/parent_user.json');
 /** ============================================================================ */
