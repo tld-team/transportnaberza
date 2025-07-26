@@ -3,48 +3,12 @@
  * Database Handler Class
  */
 class TLD_Cargo_Database_Handler {
-
+	
 	private $table_name;
 
 	public function __construct() {
 		global $wpdb;
 		$this->table_name = $wpdb->prefix . 'tld_cargo_orders';
-	}
-
-	/**
-	 * Create custom table
-	 */
-	public function create_table() {
-		global $wpdb;
-
-		$sql = "CREATE TABLE IF NOT EXISTS {$this->table_name} (
-            id mediumint(9) NOT NULL AUTO_INCREMENT,
-            user mediumint(9) NOT NULL,
-            created datetime DEFAULT CURRENT_TIMESTAMP,
-            date_from date NOT NULL,
-            date_to date NOT NULL,
-            date_from_plus date,
-            date_to_plus date,
-            vehicle_type varchar(255) NOT NULL,
-            trailer varchar(255),
-            location_from varchar(255) NOT NULL,
-            location_to varchar(255) NOT NULL,
-            country_from varchar(100),
-            country_to varchar(100),
-            zip_from varchar(20),
-            zip_to varchar(20),
-            distance varchar(100),
-            weight varchar(100),
-            length varchar(100),
-            height varchar(100),
-            price varchar(100),
-            deactive tinyint(1) DEFAULT 0,
-            description text,
-            PRIMARY KEY (id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		dbDelta($sql);
 	}
 
 	/**
@@ -80,25 +44,82 @@ class TLD_Cargo_Database_Handler {
 	/**
 	 * Get all records with optional pagination
 	 */
-	public function get_all_records($page = 1, $per_page = 10, $orderby = 'id', $order = 'DESC') {
+	/**
+	 * Get all records with optional pagination
+	 * 
+	 * @param int $page - page number (default: 1)
+	 * @param int $per_page - number of records per page (default: 10)
+	 * @param string $orderby - column to order by (default: 'created')
+	 * @param string $order - ASC or DESC (default: DESC)
+	 */
+	public function get_all_records($page = 1, $per_page = 10, $orderby = 'created', $order = 'DESC') {
 		global $wpdb;
 		
+		// Validate input parameters
 		$page = absint($page);
 		$per_page = absint($per_page);
+		
+		// Calculate offset
 		$offset = ($page - 1) * $per_page;
 		
 		// Validate orderby to prevent SQL injection
-		$valid_columns = $this->get_table_columns();
-		$orderby = in_array($orderby, $valid_columns) ? $orderby : 'id';
+		$valid_columns = $this->get_table_columns(); // Get all columns of the table
+		$orderby = in_array($orderby, $valid_columns) ? $orderby : 'id'; // If orderby is not valid, use 'id'
+		
+		// Validate order
 		$order = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
 		
+		// Prepare SQL query
 		$query = $wpdb->prepare(
 			"SELECT * FROM {$this->table_name} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d",
 			$per_page,
 			$offset
 		);
 		
+		// Execute query and return results
 		return $wpdb->get_results($query, ARRAY_A);
+	}
+
+	public function get_extended_record_by_date ($days_to_extend = 0) {
+		global $wpdb;
+		
+		$current_date = current_time('mysql', true);
+			
+		$extended_date = date('Y-m-d', strtotime($current_date . " - {$days_to_extend} days"));
+		tld_log("Extended date: " . $extended_date);
+		// Ako je prosleđen broj dana za produženje, koristimo date_from kao krajnji datum
+		if ($days_to_extend > 0) {
+			$query = $wpdb->prepare(
+				"SELECT * FROM `" . $wpdb->prefix . "tld_cargo_orders` 
+				WHERE deactive = 0 
+				AND (
+					date_from <= %s
+					OR 
+					(date_from IS NOT NULL AND date_from <= %s)
+				)
+				ORDER BY created DESC", // Dodato sortiranje
+				$extended_date,
+				$extended_date
+			);
+		} else {
+			// Standardni upis bez produženja
+			$query = $wpdb->prepare(
+				"SELECT * FROM `" . $wpdb->prefix . "tld_cargo_orders` 
+				WHERE deactive=0 
+				AND date_from<=%s
+				ORDER BY created DESC",  // Dodato sortiranje
+				$current_date
+			);
+		}
+		
+		$results = $wpdb->get_results($query);
+//		return json_encode($results);
+		$error = $wpdb->last_error;
+        if ($error) {
+            tld_log("Error: {$error}");
+        }
+		
+		return $results;
 	}
 
 	/**

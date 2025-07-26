@@ -189,5 +189,16 @@ class TLD_Cargo_Database_Admin {
 		if ( file_exists( TLD_CARGO_DB_PLUGIN_DIR . 'assets/admin.css' ) ) {
 			wp_enqueue_style( 'tld-cargo-db-admin', TLD_CARGO_DB_PLUGIN_URL . 'assets/admin.css', array(), TLD_CARGO_DB_VERSION );
 		}
+
+
+		// if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'datatable_cargo')) {
+			// Uključivanje DataTables CSS i JS (prilagodite putanje po potrebi)
+			wp_enqueue_style('datatables-css', plugin_dir_url(__FILE__) . 'assets/datatables/datatables.min.css');
+			wp_enqueue_script('jquery');
+			wp_enqueue_script('datatables-js', plugin_dir_url(__FILE__) . 'assets/datatables/datatables.min.js', array('jquery'), null, true);
+			
+			// Uključivanje custom skripte
+			wp_enqueue_script('datatable-custom-script', plugin_dir_url(__FILE__) . 'assets/datatables/datatable-custom.js', array(), null, true);
+		// }
 	}
 }

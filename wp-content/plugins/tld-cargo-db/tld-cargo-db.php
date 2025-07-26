@@ -20,13 +20,11 @@ define('TLD_CARGO_DB_PLUGIN_URL', plugin_dir_url(__FILE__));
 /**
  * Main Plugin Class
  */
-/**
- * Main Plugin Class
- */
 class TLD_Cargo_Database {
 
 	private $admin;
-	private $database;
+	private $create_table;
+	private $database_handler;
 	private $form_handler;
 
 	/**
@@ -52,13 +50,18 @@ class TLD_Cargo_Database {
 		if (file_exists(TLD_CARGO_DB_PLUGIN_DIR . 'includes/class-form-handler.php')) {
 			require_once TLD_CARGO_DB_PLUGIN_DIR . 'includes/class-form-handler.php';
 		}
+
+		if (file_exists(TLD_CARGO_DB_PLUGIN_DIR . 'includes/class-create-table.php')) {
+			require_once TLD_CARGO_DB_PLUGIN_DIR . 'includes/class-create-table.php';
+		}
 	}
 
 	/**
 	 * Initialize plugin components
 	 */
 	private function init() {
-		$this->database = new TLD_Cargo_Database_Handler();
+		$this->database_handler = new TLD_Cargo_Database_Handler();
+		$this->create_table = new TLD_Cargo_Create_Table();
 		$this->admin = new TLD_Cargo_Database_Admin();
 
 		// Initialize form handler only if CF7 is active
@@ -79,7 +82,7 @@ class TLD_Cargo_Database {
 	 * Plugin activation
 	 */
 	public function activate() {
-		$this->database->create_table();
+		$this->create_table->create_table();
 
 		// Set default options
 		$default_options = array(

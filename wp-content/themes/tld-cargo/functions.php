@@ -193,6 +193,7 @@ function dd($array, $array2 = null )
  */
 function tld_cargo_scripts()
 {
+    global $post;
     wp_enqueue_style('tld-cargo-style', get_stylesheet_uri(), array(), _S_VERSION);
     wp_style_add_data('tld-cargo-style', 'rtl', 'replace');
     // Bootstrap Style CSS
@@ -279,6 +280,10 @@ function tld_cargo_scripts()
     if (is_singular() && comments_open() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
     }
+
+    wp_enqueue_script('datatable', get_template_directory_uri() . '/assets/js/datatables/jquery.dataTables.min.js', array('jquery'), '', true);
+    wp_enqueue_style('datatable', get_template_directory_uri() . '/assets/css/datatables/jquery.dataTables.min.css');
+    // wp_enqueue_script('datatable-custom', get_template_directory_uri() . '/assets/js/datatables/datatable-custom.js', array('jquery'), '', true);
 }
 
 add_action('wp_enqueue_scripts', 'tld_cargo_scripts');
@@ -344,9 +349,8 @@ require get_template_directory() . '/inc/user-profile.php';
 require get_template_directory() . '/inc/forms/user-form.php';
 require get_template_directory() . '/inc/cargo-scraping.php';
 
-
-
-
-// $user = get_user_by('email', 'gasa338@gmail.com');
-// // Set user role to contributor
-// $user->set_role('administrator');
+/**
+ * table shortcode
+ */
+require get_template_directory() . '/inc/table-shortcode/cargo-shortcode.php';
+// require get_template_directory() . '/inc/table-shortcode/cargo-shortcode-server_side.php';
