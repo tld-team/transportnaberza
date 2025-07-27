@@ -1,121 +1,87 @@
 <?php
+function tld_get_flags() {
+    $json_url = get_template_directory_uri() . '/assets/js/countries-flags.json';
+    $response = wp_remote_get( $json_url );
+
+    if ( is_wp_error( $response ) ) {
+        $flags = array();
+    } else {
+        $flags = json_decode( wp_remote_retrieve_body( $response ) );
+    }
+    return $flags;
+}
 function tld_shortcode_cargo($atts) {
    do_action( 'qm/start', 'tld_cargo_shortcode_query_monitor' );
+   $db_handler = new TLD_Cargo_Database_Handler();
+   $imported_data = $db_handler->get_extended_record_by_date(12);
+   
+   $json_url = get_template_directory_uri() . '/assets/js/countries-flags.json';
+   $response = wp_remote_get( $json_url );
+
+   if ( is_wp_error( $response ) ) {
+       $flags = array();
+   } else {
+       $flags = json_decode( wp_remote_retrieve_body( $response ) );
+   }
+//    dd($flags);
     ?>
     <table id="example" class="display">
         <thead>
             <tr>
-                <th><?php svg_calendar(); ?></th>
-                <th>Mesto Utovara</th>
-                <th><?php svg_calendar(); ?></th>
-                <th>Mesto Istovara</th>
-                <th>KM</th>
-                <th>Tip Vozila</th>
-                <th>Nadogradnja</th>
-                <th><?php svg_cargo_data(); ?></th>
+                <th class="tld-table-header-from" ><?php svg_calendar(); ?> </th>
+                <th class="tld-table-header-from">Mesto Utovara</th>
+                <th class="tld-table-header-to"><?php svg_calendar(); ?></th>
+                <th class="tld-table-header-to">Mesto Istovara</th>
+                <th class="tld-table-header-content">KM</th>
+                <th class="tld-table-header-content">Tip Vozila</th>
+                <th class="tld-table-header-content">Nadogradnja</th>
+                <th class="tld-table-header-content"><?php svg_cargo_data(); ?></th>
             </tr>
         </thead>
+        <tbody>
+            <?php
+
+            foreach ($imported_data as $data) {
+                ?>
+                <tr>
+                    <td class="tld-table-content-from"><?php echo $formattedDate = date('j.m', strtotime($data->date_from)); ?></td>
+                    <td class="tld-table-content-from"><span style="display: inline-block; width: 20px; height: 20px; "><?php echo $flags->{$data->country_from} ?></span><?php echo $data->location_from; ?></td>
+                    <td class="tld-table-content-to"><?php echo $formattedDate = date('j.m', strtotime($data->date_to)); ?></td>
+                    <td class="tld-table-content-to"><span style="display: inline-block; width: 20px; height: 20px; "><?php echo $flags->{$data->country_to} ?></span><?php echo $data->location_to; ?></td>
+                    <td class="tld-table-content-content"><?php echo $data->vehicle_type; ?></td>
+                    <td class="tld-table-content-content"><?php echo $data->trailer; ?></td>
+                    <td class="tld-table-content-content"><?php echo $data->country_from; ?></td>
+                    <td class="tld-table-content-content"><?php echo $data->country_to; ?></td>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
         <tfoot>
             <tr>
-                <th><?php svg_calendar(); ?></th>
-                <th>Mesto Utovara</th>
-                <th><?php svg_calendar(); ?></th>
-                <th>Mesto Istovara</th>
-                <th>KM</th>
-                <th>Tip Vozila</th>
-                <th>Nadogradnja</th>
-                <th><?php svg_cargo_data(); ?></th>
+                <th class="tld-table-header-from"> <?php svg_calendar(); ?> </th>
+                <th class="tld-table-header-from">Mesto Utovara</th>
+                <th class="tld-table-header-to"><?php svg_calendar(); ?></th>
+                <th class="tld-table-header-to">Mesto Istovara</th>
+                <th class="tld-table-header-content">KM</th>
+                <th class="tld-table-header-content">Tip Vozila</th>
+                <th class="tld-table-header-content">Nadogradnja</th>
+                <th class="tld-table-header-content"><?php svg_cargo_data(); ?></th>
             </tr>
         </tfoot>
     </table>
     <?php
     // Dodajte inline JavaScript u footer
     add_action('wp_footer', function () {
-        $imported_data = [];
         $db_handler = new TLD_Cargo_Database_Handler();
         $imported_data = $db_handler->get_extended_record_by_date(12);
         ?>
         <script type="text/javascript">
-        // Formatting function for row details - modify as you need
-        function format(d) {
-            // `d` is the original data object for the row
-            return (
-                '<dl>' +
-                '<dt>Full name:</dt>' +
-                '<dd>' +
-                d.location_to +
-                '</dd>' +
-                '<dt>Extension number:</dt>' +
-                '<dd>' +
-                d.vehicle_type +
-                '</dd>' +
-                '<dt>Extra info:</dt>' +
-                '<dd>And any further details here (images etc)...</dd>' +
-                '</dl>'
-            );
-        }
-        
         jQuery(document).ready(function($) {
             let table = new DataTable('#example', {
-                data: <?php echo json_encode($imported_data); ?>,
-                columns: [
-                    { 
-                        data: 'date_from',
-                        className: 'dt-control2',
-                        defaultContent: ''
-                    },
-                    { 
-                        data: 'location_from',
-                        className: 'dt-control2',                        
-                        defaultContent: ''
-                    },
-                    { 
-                        data: 'date_to',
-                        className: 'dt-control2',                        
-                        defaultContent: ''
-                    },
-                    { 
-                        data: 'location_to',
-                        className: 'dt-control2',                        
-                        defaultContent: ''
-                    },
-                    { 
-                        data: 'vehicle_type',
-                        className: 'dt-control2',                        
-                        defaultContent: ''
-                    },
-                    { 
-                        data: 'trailer',
-                        className: 'dt-control2',                        
-                        defaultContent: ''
-                    },
-                    { 
-                        data: 'country_from',
-                        className: 'dt-control2',                        
-                        defaultContent: ''
-                    },
-                    { 
-                        data: 'country_to',
-                        className: 'dt-control2',                        
-                        defaultContent: ''
-                    },
-                ],
-                order: [[1, 'asc']]
-            });
-            
-            // Add event listener for opening and closing details
-            table.on('click', 'tbody td.dt-control2', function (e) {
-                let tr = e.target.closest('tr');
-                let row = table.row(tr);
-            
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                }
-                else {
-                    // Open this row
-                    row.child(format(row.data())).show();
-                }
+                pageLength: 50, // Postavlja podrazumevani broj stavki na 20
+                lengthMenu: [20, 50, 75, 100], // Opcije u padajućem meniju za broj stavki
+                order: [[0, 'desc']]
             });
         });
         </script>

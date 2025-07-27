@@ -249,22 +249,12 @@ function tld_cargo_scripts()
         );
     }
 
-    wp_enqueue_script('jquery-ui-core');
-    wp_enqueue_script('jquery-ui-autocomplete');
-    wp_enqueue_script('autocomplete-form', get_template_directory_uri() . '/assets/js/autocomplete-form.js', array('jquery'), null, true);
-    wp_localize_script('autocomplete-form', 'autocompleteData', array(
-        'json_url' => get_template_directory_uri() . '/assets/js/countries-cities.json',
-        'ajax_url' => admin_url('admin-ajax.php')
-    ));
-
-    
     // Custom JS
     wp_enqueue_script('site-custom', get_template_directory_uri() . '/assets/js/site-custom.js', array('jquery'), null, true);
 
     /**
      * form Ajax
      */
-
     if (is_page('account')) {
 	    wp_enqueue_style('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css' );
 
@@ -276,14 +266,23 @@ function tld_cargo_scripts()
             'nonce' => wp_create_nonce('sS8yMjPQ5EEJ7Qa')
         ));
 
+        wp_enqueue_script('jquery-ui-core');
+        wp_enqueue_script('jquery-ui-autocomplete');
+        wp_enqueue_script('autocomplete-form', get_template_directory_uri() . '/assets/js/autocomplete-form.js', array('jquery'), null, true);
+        wp_localize_script('autocomplete-form', 'autocompleteData', array(
+            'json_url' => get_template_directory_uri() . '/assets/js/countries-cities.json',
+            'ajax_url' => admin_url('admin-ajax.php')
+        ));
+
     }
     if (is_singular() && comments_open() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
     }
 
-    wp_enqueue_script('datatable', get_template_directory_uri() . '/assets/js/datatables/jquery.dataTables.min.js', array('jquery'), '', true);
-    wp_enqueue_style('datatable', get_template_directory_uri() . '/assets/css/datatables/jquery.dataTables.min.css');
-    // wp_enqueue_script('datatable-custom', get_template_directory_uri() . '/assets/js/datatables/datatable-custom.js', array('jquery'), '', true);
+    wp_enqueue_script('datatable', get_template_directory_uri() . '/assets/js/datatables/dataTables.min.js', array('jquery'), '', true);
+    wp_enqueue_style('datatable', get_template_directory_uri() . '/assets/css/datatables/dataTables.min.css');
+    wp_enqueue_style('datatable-custom', get_template_directory_uri() . '/assets/css/datatables/custom.css');
+    // wp_enqueue_script('datatable-custom', get_template_directory_uri() . '/assets/js/datatables/custom.js', array(), '', true);
 }
 
 add_action('wp_enqueue_scripts', 'tld_cargo_scripts');
