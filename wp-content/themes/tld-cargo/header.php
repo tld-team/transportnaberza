@@ -93,7 +93,7 @@ $tld_navigation = get_field('tld_navigation', 'option');
             <div class="navbar-collapse offcanvas offcanvas-start offcanvas-collapse" id="navbarCollapse">
                 <div class="offcanvas-header">
                     <a class="navbar-brand" href="<?php echo home_url(); ?>">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo_footer.svg" alt="<?php bloginfo('name'); ?>">
+                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo-white.png" alt="<?php bloginfo('name'); ?>">
                     </a>
                     <button class="navbar-toggler x collapsed" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
