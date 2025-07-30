@@ -1,118 +1,84 @@
 <?php
-function tld_get_flags()
-{
-    $json_url = get_template_directory_uri() . '/assets/js/countries-flags.json';
-    $response = wp_remote_get($json_url);
 
-    if (is_wp_error($response)) {
-        $flags = array();
-    } else {
-        $flags = json_decode(wp_remote_retrieve_body($response));
-    }
-    return $flags;
-}
+function tld_shortcode_cargo($atts) {
+	do_action('qm/start', 'tld_cargo_shortcode_query_monitor');
 
-function tld_shortcode_cargo($atts)
-{
-    do_action('qm/start', 'tld_cargo_shortcode_query_monitor');
-    $db_handler = new TLD_Cargo_Database_Handler();
-    $imported_data = $db_handler->get_extended_record_by_date(12);
-    dd($imported_data[0]);
-    $json_url = get_template_directory_uri() . '/assets/js/countries-flags.json';
-    $response = wp_remote_get($json_url);
+	$db_handler = new TLD_Cargo_Database_Handler();
+	$imported_data = $db_handler->get_extended_record_by_date(12);
 
-    if (is_wp_error($response)) {
-        $flags = array();
-    } else {
-        $flags = json_decode(wp_remote_retrieve_body($response));
-    }
-    //    dd($flags);
-    ?>
-    <table id="cargo-shortcode" class="display">
+	$json_url = get_template_directory_uri() . '/assets/js/countries-flags.json';
+	$response = wp_remote_get($json_url);
+
+	if (is_wp_error($response)) {
+		$flags = new stdClass(); // Koristimo objekat umesto praznog niza
+	} else {
+		$flags = json_decode(wp_remote_retrieve_body($response));
+		if ($flags === null) {
+			$flags = new stdClass();
+		}
+	}
+
+	ob_start(); // Počinjemo output buffering - OBAVEZNO za shortcode-ove
+	?>
+    <table id="example" class="display">
         <thead>
-            <tr>
-                <th class="tld-table-header-from" ><?php svg_calendar(); ?> </th>
-                <th class="tld-table-header-from">Mesto Utovara</th>
-                <th class="tld-table-header-to"><?php svg_calendar(); ?></th>
-                <th class="tld-table-header-to">Mesto Istovara</th>
-                <th class="tld-table-header-content">KM</th>
-                <th class="tld-table-header-content">Tip Vozila</th>
-                <th class="tld-table-header-content">Nadogradnja</th>
-                <th class="tld-table-header-content"><?php svg_cargo_data(); ?></th>
-                <?php if (is_user_logged_in()) { ?>
-                    <th class="tld-table-header-content">Kompanija</th>
-                    <th class="tld-table-header-content"><?php svg_cargo_list(); ?></th>
-                <?php } ?>
-            </tr>
+        <tr>
+            <th class="tld-table-header-from"><?php svg_calendar(); ?></th>
+            <th class="tld-table-header-from">Mesto Utovara</th>
+            <th class="tld-table-header-to"><?php svg_calendar(); ?></th>
+            <th class="tld-table-header-to">Mesto Istovara</th>
+            <th class="tld-table-header-content">KM</th>
+            <th class="tld-table-header-content">Tip Vozila</th>
+            <th class="tld-table-header-content">Nadogradnja</th>
+            <th class="tld-table-header-content"><?php svg_cargo_data(); ?></th>
+        </tr>
         </thead>
         <tbody>
-            <?php
-
-            foreach ($imported_data as $data) {
-                ?>
-                <tr>
-                    <td class="tld-table-content-from"><?php echo $formattedDate = date('j.m', strtotime($data->date_from)); ?></td>
-                    <td class="tld-table-content-from"><span style="display: inline-block; width: 20px; height: 20px; "><?php echo $flags->{$data->country_from} ?></span><?php echo $data->location_from; ?></td>
-                    <td class="tld-table-content-to"><?php echo $formattedDate = date('j.m', strtotime($data->date_to)); ?></td>
-                    <td class="tld-table-content-to"><span style="display: inline-block; width: 20px; height: 20px; "><?php echo $flags->{$data->country_to} ?></span><?php echo $data->location_to; ?></td>
-                    <td class="tld-table-content-content"><?php echo $data->distance; ?></td>
-                    <td class="tld-table-content-content"><?php echo $data->vehicle_type; ?></td>
-                    <td class="tld-table-content-content"><?php echo $data->trailer; ?></td>
-                    <td class="tld-table-content-content"><?php echo $data->weight . ' / ' . $data->length; ?></td>
-                    <?php if (is_user_logged_in()) { ?>
-                        <td class="tld-table-content-content">
-                            <?php
-                            $parent_user_id = get_user_meta($data->user, 'parent_user_id', true);
-                            if ($parent_user_id) {
-                                echo uwp_get_usermeta($parent_user_id, 'kompanija') . ' (parent: ' . $parent_user_id . ')';
-                            } else {
-                                echo uwp_get_usermeta($data->user, 'kompanija') . ' (user: ' . $data->user . ')';
-                            }
-                            ?></td>
-                        <td class="tld-table-content-content"><a href="<?php echo get_edit_post_link($data->id); ?>" class="button"><?php svg_cargo_list(); ?></a></td>
-                    <?php } ?>
-                </tr>
-                <?php
-            }
-            ?>
-        </tbody>
-        <tfoot>
+		<?php foreach ($imported_data as $data): ?>
             <tr>
-                <th class="tld-table-header-from"> <?php svg_calendar(); ?> </th>
-                <th class="tld-table-header-from">Mesto Utovara</th>
-                <th class="tld-table-header-to"><?php svg_calendar(); ?></th>
-                <th class="tld-table-header-to">Mesto Istovara</th>
-                <th class="tld-table-header-content">KM</th>
-                <th class="tld-table-header-content">Tip Vozila</th>
-                <th class="tld-table-header-content">Nadogradnja</th>
-                <th class="tld-table-header-content"><?php svg_cargo_data(); ?></th>
-                <?php if (is_user_logged_in()) { ?>
-                    <th class="tld-table-header-content">Kompanija</th>
-                    <th class="tld-table-header-content"><?php svg_cargo_list(); ?></th>
-                <?php } ?>
+                <td class="tld-table-content-from"><?php echo date('j.m', strtotime($data->date_from)); ?></td>
+                <td class="tld-table-content-from">
+                        <span style="display: inline-block; width: 20px; height: 20px;">
+                            <?php echo isset($flags->{$data->country_from}) ? $flags->{$data->country_from} : ''; ?>
+                        </span>
+					<?php echo esc_html($data->location_from); ?>
+                </td>
+                <td class="tld-table-content-to"><?php echo date('j.m', strtotime($data->date_to)); ?></td>
+                <td class="tld-table-content-to">
+                        <span style="display: inline-block; width: 20px; height: 20px;">
+                            <?php echo isset($flags->{$data->country_to}) ? $flags->{$data->country_to} : ''; ?>
+                        </span>
+					<?php echo esc_html($data->location_to); ?>
+                </td>
+                <td class="tld-table-content-content"><?php echo esc_html($data->vehicle_type); ?></td>
+                <td class="tld-table-content-content"><?php echo esc_html($data->trailer); ?></td>
+                <td class="tld-table-content-content"><?php echo esc_html($data->country_from); ?></td>
+                <td class="tld-table-content-content"><?php echo esc_html($data->country_to); ?></td>
             </tr>
-        </tfoot>
+		<?php endforeach; ?>
+        </tbody>
     </table>
-    <?php
-    // Dodajte inline JavaScript u footer
-    add_action('wp_footer', function () {
-        $db_handler = new TLD_Cargo_Database_Handler();
-        $imported_data = $db_handler->get_extended_record_by_date(12);
-        ?>
-        <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            let table = new DataTable('#cargo-shortcode', {
-                pageLength: 50, // Postavlja podrazumevani broj stavki na 20
-                lengthMenu: [20, 50, 75, 100], // Opcije u padajućem meniju za broj stavki
-                order: [[0, 'desc']]
-            });
-        });
-        </script>
-        <?php
-    }, 100);
-    do_action('qm/stop', 'tld_cargo_shortcode_query_monitor');
-}
+	<?php
 
+	// Dodajemo JavaScript
+	add_action('wp_footer', function() use ($imported_data) {
+		?>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $('#example').DataTable({
+                    pageLength: 50,
+                    lengthMenu: [20, 50, 75, 100],
+                    order: [[0, 'desc']]
+                });
+            });
+        </script>
+		<?php
+	}, 100);
+
+	do_action('qm/stop', 'tld_cargo_shortcode_query_monitor');
+
+	return ob_get_clean(); // Vraćamo buffered output - OBAVEZNO za shortcode-ove
+}
 add_shortcode('datatable_cargo', 'tld_shortcode_cargo');
 
 // Ove funkcije možete dodati kao globalne ako vam trebaju na drugim mestima
