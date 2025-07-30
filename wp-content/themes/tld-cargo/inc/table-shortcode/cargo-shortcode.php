@@ -1,31 +1,34 @@
 <?php
-function tld_get_flags() {
+function tld_get_flags()
+{
     $json_url = get_template_directory_uri() . '/assets/js/countries-flags.json';
-    $response = wp_remote_get( $json_url );
+    $response = wp_remote_get($json_url);
 
-    if ( is_wp_error( $response ) ) {
+    if (is_wp_error($response)) {
         $flags = array();
     } else {
-        $flags = json_decode( wp_remote_retrieve_body( $response ) );
+        $flags = json_decode(wp_remote_retrieve_body($response));
     }
     return $flags;
 }
-function tld_shortcode_cargo($atts) {
-   do_action( 'qm/start', 'tld_cargo_shortcode_query_monitor' );
-   $db_handler = new TLD_Cargo_Database_Handler();
-   $imported_data = $db_handler->get_extended_record_by_date(12);
-   
-   $json_url = get_template_directory_uri() . '/assets/js/countries-flags.json';
-   $response = wp_remote_get( $json_url );
 
-   if ( is_wp_error( $response ) ) {
-       $flags = array();
-   } else {
-       $flags = json_decode( wp_remote_retrieve_body( $response ) );
-   }
-//    dd($flags);
+function tld_shortcode_cargo($atts)
+{
+    do_action('qm/start', 'tld_cargo_shortcode_query_monitor');
+    $db_handler = new TLD_Cargo_Database_Handler();
+    $imported_data = $db_handler->get_extended_record_by_date(12);
+    dd($imported_data[0]);
+    $json_url = get_template_directory_uri() . '/assets/js/countries-flags.json';
+    $response = wp_remote_get($json_url);
+
+    if (is_wp_error($response)) {
+        $flags = array();
+    } else {
+        $flags = json_decode(wp_remote_retrieve_body($response));
+    }
+    //    dd($flags);
     ?>
-    <table id="example" class="display">
+    <table id="cargo-shortcode" class="display">
         <thead>
             <tr>
                 <th class="tld-table-header-from" ><?php svg_calendar(); ?> </th>
@@ -36,6 +39,10 @@ function tld_shortcode_cargo($atts) {
                 <th class="tld-table-header-content">Tip Vozila</th>
                 <th class="tld-table-header-content">Nadogradnja</th>
                 <th class="tld-table-header-content"><?php svg_cargo_data(); ?></th>
+                <?php if (is_user_logged_in()) { ?>
+                    <th class="tld-table-header-content">Kompanija</th>
+                    <th class="tld-table-header-content"><?php svg_cargo_list(); ?></th>
+                <?php } ?>
             </tr>
         </thead>
         <tbody>
@@ -48,10 +55,22 @@ function tld_shortcode_cargo($atts) {
                     <td class="tld-table-content-from"><span style="display: inline-block; width: 20px; height: 20px; "><?php echo $flags->{$data->country_from} ?></span><?php echo $data->location_from; ?></td>
                     <td class="tld-table-content-to"><?php echo $formattedDate = date('j.m', strtotime($data->date_to)); ?></td>
                     <td class="tld-table-content-to"><span style="display: inline-block; width: 20px; height: 20px; "><?php echo $flags->{$data->country_to} ?></span><?php echo $data->location_to; ?></td>
+                    <td class="tld-table-content-content"><?php echo $data->distance; ?></td>
                     <td class="tld-table-content-content"><?php echo $data->vehicle_type; ?></td>
                     <td class="tld-table-content-content"><?php echo $data->trailer; ?></td>
-                    <td class="tld-table-content-content"><?php echo $data->country_from; ?></td>
-                    <td class="tld-table-content-content"><?php echo $data->country_to; ?></td>
+                    <td class="tld-table-content-content"><?php echo $data->weight . ' / ' . $data->length; ?></td>
+                    <?php if (is_user_logged_in()) { ?>
+                        <td class="tld-table-content-content">
+                            <?php
+                            $parent_user_id = get_user_meta($data->user, 'parent_user_id', true);
+                            if ($parent_user_id) {
+                                echo uwp_get_usermeta($parent_user_id, 'kompanija') . ' (parent: ' . $parent_user_id . ')';
+                            } else {
+                                echo uwp_get_usermeta($data->user, 'kompanija') . ' (user: ' . $data->user . ')';
+                            }
+                            ?></td>
+                        <td class="tld-table-content-content"><a href="<?php echo get_edit_post_link($data->id); ?>" class="button"><?php svg_cargo_list(); ?></a></td>
+                    <?php } ?>
                 </tr>
                 <?php
             }
@@ -67,6 +86,10 @@ function tld_shortcode_cargo($atts) {
                 <th class="tld-table-header-content">Tip Vozila</th>
                 <th class="tld-table-header-content">Nadogradnja</th>
                 <th class="tld-table-header-content"><?php svg_cargo_data(); ?></th>
+                <?php if (is_user_logged_in()) { ?>
+                    <th class="tld-table-header-content">Kompanija</th>
+                    <th class="tld-table-header-content"><?php svg_cargo_list(); ?></th>
+                <?php } ?>
             </tr>
         </tfoot>
     </table>
@@ -78,7 +101,7 @@ function tld_shortcode_cargo($atts) {
         ?>
         <script type="text/javascript">
         jQuery(document).ready(function($) {
-            let table = new DataTable('#example', {
+            let table = new DataTable('#cargo-shortcode', {
                 pageLength: 50, // Postavlja podrazumevani broj stavki na 20
                 lengthMenu: [20, 50, 75, 100], // Opcije u padajućem meniju za broj stavki
                 order: [[0, 'desc']]
@@ -87,12 +110,14 @@ function tld_shortcode_cargo($atts) {
         </script>
         <?php
     }, 100);
-    do_action( 'qm/stop', 'tld_cargo_shortcode_query_monitor' );
+    do_action('qm/stop', 'tld_cargo_shortcode_query_monitor');
 }
+
 add_shortcode('datatable_cargo', 'tld_shortcode_cargo');
 
 // Ove funkcije možete dodati kao globalne ako vam trebaju na drugim mestima
-function svg_calendar() {
+function svg_calendar()
+{
     ?>
     <svg width="20" height="20s" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12.162 1.0005C13.6455 1.0005 14.418 1.7655 14.418 3.228V11.5485C14.418 13.011 13.6455 13.776 12.162 13.776H2.7495C1.272 13.776 0.4995 13.011 0.4995 11.5485V3.228C0.4995 1.7595 1.272 1.0005 2.7495 1.0005H12.162ZM12.1695 4.3365H2.742C2.175 4.3365 1.86 4.6305 1.86 5.232V11.52C1.86 12.1215 2.175 12.4155 2.742 12.4155H12.1695C12.7365 12.4155 13.0515 12.1215 13.0515 11.52V5.232C13.0515 4.6305 12.7365 4.3365 12.1695 4.3365Z" fill="black"/>
@@ -101,7 +126,8 @@ function svg_calendar() {
     <?php
 }
 
-function svg_cargo_data() {
+function svg_cargo_data()
+{
     ?>
     <svg width="89" height="31" viewBox="0 0 89 31" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="89" height="30.5455" fill="white" fill-opacity="0.1"/>
@@ -109,5 +135,15 @@ function svg_cargo_data() {
         <path d="M51 28.6364C60.705 19.0833 70.392 9.55023 80.097 0V28.6364H51ZM64.749 23.0465H74.418V13.5307L64.749 23.0465ZM77.484 9.55596C77.355 9.36123 77.286 9.20659 77.175 9.09777C76.413 8.33604 75.642 7.58005 74.871 6.82691C74.592 6.55486 74.295 6.53482 74.061 6.76105C73.83 6.98441 73.851 7.28223 74.127 7.55714C74.544 7.97236 74.964 8.38186 75.384 8.79423C75.747 9.15218 76.11 9.51013 76.476 9.86523C76.644 10.0256 76.854 10.123 77.064 9.98836C77.223 9.891 77.331 9.71918 77.484 9.55596ZM63.513 17.2591C63.354 17.388 63.174 17.4796 63.084 17.6285C62.949 17.849 63.03 18.0724 63.219 18.2585L65.565 20.5666C65.826 20.8215 66.129 20.833 66.351 20.6125C66.567 20.4005 66.558 20.0827 66.309 19.8364C65.532 19.0632 64.749 18.2929 63.963 17.5312C63.855 17.4252 63.705 17.3708 63.513 17.2591ZM60.582 26.1794C60.732 26.0534 60.915 25.9617 61.002 25.8128C61.128 25.6038 61.056 25.3833 60.876 25.2057C60.087 24.4325 59.301 23.6536 58.509 22.8805C58.26 22.637 57.933 22.6285 57.723 22.8432C57.516 23.0523 57.519 23.3587 57.759 23.5964C58.548 24.3839 59.343 25.1656 60.144 25.9417C60.243 26.039 60.393 26.082 60.582 26.1794ZM71.946 14.7935C71.922 14.7477 71.889 14.616 71.805 14.533C70.995 13.7225 70.182 12.915 69.348 12.1275C69.237 12.0215 68.997 11.97 68.841 12.0015C68.457 12.0845 68.328 12.5456 68.613 12.832C69.417 13.6481 70.242 14.4442 71.061 15.246C71.097 15.2804 71.136 15.309 71.178 15.3319C71.535 15.5266 71.955 15.2718 71.946 14.7935ZM67.251 17.3995C67.173 17.2305 67.149 17.1045 67.074 17.0272C66.624 16.5661 66.168 16.108 65.697 15.667C65.493 15.4751 65.193 15.5009 65.001 15.6813C64.8 15.8674 64.767 16.1795 64.968 16.3886C65.415 16.8525 65.871 17.3135 66.354 17.7374C66.468 17.8376 66.738 17.8519 66.891 17.7946C67.041 17.7374 67.134 17.534 67.251 17.3995ZM72.693 12.0473C72.63 11.8927 72.612 11.7724 72.546 11.7008C72.075 11.2197 71.598 10.7415 71.106 10.2833C70.92 10.1115 70.608 10.1602 70.434 10.3349C70.248 10.521 70.206 10.8016 70.392 10.9935C70.86 11.4803 71.337 11.9557 71.841 12.4024C71.943 12.494 72.21 12.4883 72.357 12.4253C72.498 12.3623 72.588 12.1733 72.693 12.0473ZM69.066 15.5982C68.979 15.4293 68.946 15.2975 68.862 15.2116C68.424 14.7649 67.977 14.321 67.521 13.8915C67.323 13.7054 67.011 13.7168 66.819 13.8886C66.615 14.069 66.573 14.3898 66.774 14.596C67.221 15.0627 67.677 15.5238 68.163 15.9505C68.277 16.0507 68.553 16.0679 68.706 16.0077C68.859 15.9476 68.949 15.7414 69.066 15.5982ZM63.609 20.9819C63.555 20.8301 63.546 20.727 63.492 20.6697C62.997 20.1715 62.508 19.6646 61.986 19.1978C61.797 19.0289 61.53 19.0919 61.347 19.2837C61.167 19.4756 61.122 19.7247 61.308 19.9166C61.77 20.4063 62.25 20.8816 62.751 21.3312C62.856 21.4229 63.123 21.4315 63.264 21.3685C63.417 21.2969 63.507 21.0993 63.609 20.9819ZM61.797 22.7545C61.725 22.597 61.704 22.471 61.629 22.3936C61.17 21.9269 60.708 21.463 60.231 21.0162C60.024 20.8215 59.733 20.8616 59.538 21.0563C59.361 21.231 59.322 21.5345 59.496 21.7178C59.958 22.196 60.426 22.6685 60.924 23.1067C61.035 23.204 61.308 23.2069 61.461 23.1439C61.605 23.0924 61.689 22.8919 61.797 22.7545ZM72.591 8.33032C72.438 8.45346 72.258 8.54223 72.165 8.68827C72.03 8.89445 72.093 9.11782 72.273 9.29536C72.693 9.70773 73.107 10.123 73.533 10.5325C73.779 10.7673 74.082 10.7759 74.298 10.5697C74.511 10.3664 74.514 10.0456 74.283 9.81368C73.869 9.39559 73.449 8.98323 73.023 8.57945C72.921 8.48495 72.777 8.43627 72.591 8.33032Z" fill="black"/>
         <path d="M50.2216 6L45.5341 22.6232H44L48.6875 6H50.2216Z" fill="black"/>
     </svg>        
+    <?php
+}
+
+function svg_cargo_list()
+{
+    ?>
+    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <path d="M153.6 685.2l65.5 0c29.099999999999994 0 53.599999999999994 23.799999999999955 53.599999999999994 53.59999999999991 0 27.5-21.799999999999983 50.90000000000009-48.79999999999998 53.40000000000009l-4.800000000000011 0.1999999999999318-65.5 0c-29.5 0-53.599999999999994-24.5-53.599999999999994-53.60000000000002 0-28.199999999999932 21.5-50.89999999999998 48.80000000000001-53.39999999999998l4.799999999999983-0.1999999999999318 65.5 0-65.5 0z m0-242.80000000000007l65.5 0c29.099999999999994 0 53.599999999999994 24.100000000000023 53.599999999999994 53.60000000000002 0 27.899999999999977-21.799999999999983 51-48.79999999999998 53.39999999999998l-4.800000000000011 0.20000000000004547-65.5 0c-29.5 0-53.599999999999994-24.100000000000023-53.599999999999994-53.60000000000002 0-27.80000000000001 21.5-50.89999999999998 48.80000000000001-53.39999999999998l4.799999999999983-0.20000000000004547z m0-242.39999999999998l65.5 0c29.099999999999994 0 53.599999999999994 23.69999999999999 53.599999999999994 53.599999999999994 0 27.50000000000003-21.799999999999983 50.900000000000006-48.79999999999998 53.400000000000006l-4.800000000000011 0.19999999999998863-65.5 0c-29.5 0-53.599999999999994-24.5-53.599999999999994-53.599999999999994 0-28.19999999999999 21.5-50.900000000000006 48.80000000000001-53.400000000000006l4.799999999999983-0.19999999999998863z"/>
+		<path d="M879.3 691.3c26.800000000000068 0 47.5 21.100000000000023 47.5 47.5 0 26.5-21 47.5-47.5 47.5l-480.59999999999997 0c-26.80000000000001 0-47.89999999999998-21-47.89999999999998-47.5 0-26.799999999999955 21.099999999999966-47.5 47.89999999999998-47.5l480.59999999999997 0z m-480.59999999999997-242.79999999999995l480.59999999999997 0c26.800000000000068 0 47.5 21.100000000000023 47.5 47.5 0 25.299999999999955-18.59999999999991 45.10000000000002-42.89999999999998 47.299999999999955l-4.600000000000023 0.20000000000004547-480.59999999999997 0c-26.80000000000001 0-47.89999999999998-21-47.89999999999998-47.5 0-25.19999999999999 18.69999999999999-45 43.19999999999999-47.19999999999999l4.699999999999989-0.30000000000001137z m0-242.4l480.59999999999997 0c26.800000000000068 0 47.5 21.099999999999994 47.5 47.5 0 24.900000000000006-18.59999999999991 45.00000000000003-42.89999999999998 47.29999999999998l-4.600000000000023 0.20000000000004547-480.59999999999997 0c-26.80000000000001 0-47.89999999999998-21.100000000000023-47.89999999999998-47.50000000000003 0-25.19999999999999 18.69999999999999-45 43.19999999999999-47.29999999999998l4.699999999999989-0.20000000000001705z" opacity="0.4"/>
+    </svg>
     <?php
 }
